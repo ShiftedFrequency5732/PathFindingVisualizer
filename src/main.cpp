@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <stack>
+#include <vector>
 
 #include "../include/config.hpp"
 #include "../include/cell.hpp"
@@ -135,10 +136,93 @@ bool step_dfs(std::stack<Point> &cells, Cell grid[GRID_SIZE][GRID_SIZE], bool vi
     return false;
 }
 
+class Compare {
+public:
+    bool operator()(std::pair<int, Point> a, std::pair<int, Point> b){
+        if(a.first > b.first) {
+            return true;
+        } 
+        return false;
+    }
+};
+
+bool step_dijkstra(std::priority_queue<std::pair<int, Point>, std::vector<std::pair<int, Point>>, Compare> &cells, Cell grid[GRID_SIZE][GRID_SIZE], bool visited[GRID_SIZE][GRID_SIZE], Point trace[GRID_SIZE][GRID_SIZE], bool valid[GRID_SIZE][GRID_SIZE], int distance[GRID_SIZE][GRID_SIZE], Point end_cell) {
+    if (!cells.empty()) {
+        Point cell = cells.top().second;
+        cells.pop();
+
+        if (cell.i == end_cell.i && cell.j == end_cell.j) {
+            return true;
+        }
+
+        if (visited[cell.i][cell.j]) {
+            return false;
+        }
+
+        visited[cell.i][cell.j] = true;
+        if (grid[cell.i][cell.j].getType() == Cell::CellType::EMPTY) {
+            grid[cell.i][cell.j].setFillColor(BLUE);
+        }
+
+        if (cell.i - 1 >= 0 && (grid[cell.i - 1][cell.j].getType() == Cell::CellType::EMPTY || grid[cell.i - 1][cell.j].getType() == Cell::CellType::END) && !visited[cell.i - 1][cell.j]) {
+            if (distance[cell.i - 1][cell.j] > distance[cell.i][cell.j] + 1) {
+                distance[cell.i - 1][cell.j] = distance[cell.i][cell.j] + 1;
+                cells.push({distance[cell.i - 1][cell.j], { cell.i - 1, cell.j }});
+                trace[cell.i - 1][cell.j] = cell;
+                valid[cell.i - 1][cell.j] = true;
+                if (grid[cell.i - 1][cell.j].getType() == Cell::CellType::EMPTY) {
+                    grid[cell.i - 1][cell.j].setFillColor(YELLOW);
+                }
+            }
+        }
+
+        if (cell.i + 1 < GRID_SIZE && (grid[cell.i + 1][cell.j].getType() == Cell::CellType::EMPTY || grid[cell.i + 1][cell.j].getType() == Cell::CellType::END) && !visited[cell.i + 1][cell.j]) {
+            if (distance[cell.i + 1][cell.j] > distance[cell.i][cell.j] + 1) {
+                distance[cell.i + 1][cell.j] = distance[cell.i][cell.j] + 1;
+                cells.push({ distance[cell.i + 1][cell.j], { cell.i + 1, cell.j } });
+                trace[cell.i + 1][cell.j] = cell;
+                valid[cell.i + 1][cell.j] = true;
+                if (grid[cell.i + 1][cell.j].getType() == Cell::CellType::EMPTY) {
+                    grid[cell.i + 1][cell.j].setFillColor(YELLOW);
+                }
+            }
+        }
+
+        if (cell.j - 1 >= 0 && (grid[cell.i][cell.j - 1].getType() == Cell::CellType::EMPTY || grid[cell.i][cell.j - 1].getType() == Cell::CellType::END) && !visited[cell.i][cell.j - 1]) {
+            if (distance[cell.i][cell.j - 1] > distance[cell.i][cell.j] + 1) {
+                distance[cell.i][cell.j - 1] = distance[cell.i][cell.j] + 1;
+                cells.push({ distance[cell.i][cell.j - 1], { cell.i, cell.j - 1 }});
+                trace[cell.i][cell.j - 1] = cell;
+                valid[cell.i][cell.j - 1] = true;
+                if (grid[cell.i][cell.j - 1].getType() == Cell::CellType::EMPTY) {
+                    grid[cell.i][cell.j - 1].setFillColor(YELLOW);
+                }
+            }
+        }
+
+        if (cell.j + 1 < GRID_SIZE && (grid[cell.i][cell.j + 1].getType() == Cell::CellType::EMPTY || grid[cell.i][cell.j + 1].getType() == Cell::CellType::END) && !visited[cell.i][cell.j + 1]) {
+            if (distance[cell.i][cell.j + 1] > distance[cell.i][cell.j] + 1) {
+                distance[cell.i][cell.j + 1] = distance[cell.i][cell.j] + 1;
+                cells.push({ distance[cell.i][cell.j + 1], { cell.i, cell.j + 1 } });
+                trace[cell.i][cell.j + 1] = cell;
+                valid[cell.i][cell.j + 1] = true;
+                if (grid[cell.i][cell.j + 1].getType() == Cell::CellType::EMPTY) {
+                    grid[cell.i][cell.j + 1].setFillColor(YELLOW);
+                }
+            }
+        }
+
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 int main() {
     // Initialize the basic window.
     InitWindow(INITIAL_WIDTH, INITIAL_HEIGHT, WINDOW_TITLE);
-    //SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
+    SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
     Cell grid[GRID_SIZE][GRID_SIZE];
@@ -148,10 +232,11 @@ int main() {
 
     bool run_path_search = false;
 
-    std::queue<Point> cells;
+    std::priority_queue<std::pair<int, Point>, std::vector<std::pair<int, Point>>, Compare> cells;
     bool visited[GRID_SIZE][GRID_SIZE] = { false };
     bool valid[GRID_SIZE][GRID_SIZE] = { false };
     Point trace[GRID_SIZE][GRID_SIZE];
+    int distance[GRID_SIZE][GRID_SIZE];
 
     while (!WindowShouldClose()) {
         // Start preparing the frame buffer for drawing.
@@ -170,7 +255,7 @@ int main() {
         }
 
         if (run_path_search) {
-            if (step_bfs(cells, grid, visited, trace, valid, end_cell)) {
+            if (step_dijkstra(cells, grid, visited, trace, valid, distance, end_cell)) {
                 Point p = end_cell;
                 while (valid[p.i][p.j]) {
                     p = trace[p.i][p.j];
@@ -186,8 +271,14 @@ int main() {
         EndDrawing();
 
         if (IsKeyPressed(KEY_SPACE)) {
-            run_path_search = !run_path_search;
-            cells.push(start_cell);
+            run_path_search = true;
+            cells.push({ 0, start_cell });
+            for (int i = 0; i < GRID_SIZE; ++i) {
+                for (int j = 0; j < GRID_SIZE; ++j) {
+                    distance[i][j] = 1000;
+                }
+            }
+            distance[start_cell.i][start_cell.j] = 0;
         }
 
         if (!run_path_search) {
