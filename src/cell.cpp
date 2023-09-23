@@ -9,7 +9,7 @@ Cell::Cell() {
 void Cell::setType(CellType type) {
     this->type = type;
 
-    // If you change the type, you also change the fill color.
+    // If you change the type of cell, you also change its fill color.
     switch (this->type) {
         case CellType::WALL:
             this->fill = WHITE;
@@ -37,3 +37,4 @@ void Cell::setFillColor(Color fill) {
 Color Cell::getFillColor() const {
     return this->fill;
 }
+

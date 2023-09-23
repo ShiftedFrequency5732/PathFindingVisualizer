@@ -15,10 +15,130 @@ void MousePickWalls(Cell grid[GRID_SIZE][GRID_SIZE], int cell_width, int cell_he
 
 void MousePickStartEnd(Cell grid[GRID_SIZE][GRID_SIZE], int cell_width, int cell_height, Point &start, Point &end);
 
+bool step_bfs(std::queue<Point> &cells, Cell grid[GRID_SIZE][GRID_SIZE], bool visited[GRID_SIZE][GRID_SIZE], Point trace[GRID_SIZE][GRID_SIZE], bool valid[GRID_SIZE][GRID_SIZE], Point end_cell) {
+    if (!cells.empty()) {
+        Point cell = cells.front();
+        cells.pop();
+
+        if (cell.i == end_cell.i && cell.j == end_cell.j) {
+            return true;
+        }
+
+        if (visited[cell.i][cell.j]) {
+            return false;
+        }
+
+        visited[cell.i][cell.j] = true;
+        if (grid[cell.i][cell.j].getType() == Cell::CellType::EMPTY) {
+            grid[cell.i][cell.j].setFillColor(BLUE);
+        }
+
+        if (cell.i - 1 >= 0 && (grid[cell.i - 1][cell.j].getType() == Cell::CellType::EMPTY || grid[cell.i - 1][cell.j].getType() == Cell::CellType::END) && !visited[cell.i - 1][cell.j]) {
+            cells.push({ cell.i - 1, cell.j });
+            trace[cell.i - 1][cell.j] = cell;
+            valid[cell.i - 1][cell.j] = true;
+            if (grid[cell.i - 1][cell.j].getType() == Cell::CellType::EMPTY) {
+                grid[cell.i - 1][cell.j].setFillColor(YELLOW);
+            }
+        }
+
+        if (cell.i + 1 < GRID_SIZE && (grid[cell.i + 1][cell.j].getType() == Cell::CellType::EMPTY || grid[cell.i + 1][cell.j].getType() == Cell::CellType::END) && !visited[cell.i + 1][cell.j]) {
+            cells.push({ cell.i + 1, cell.j });
+            trace[cell.i + 1][cell.j] = cell;
+            valid[cell.i + 1][cell.j] = true;
+            if (grid[cell.i + 1][cell.j].getType() == Cell::CellType::EMPTY) {
+                grid[cell.i + 1][cell.j].setFillColor(YELLOW);
+            }
+        }
+
+        if (cell.j - 1 >= 0 && (grid[cell.i][cell.j - 1].getType() == Cell::CellType::EMPTY || grid[cell.i][cell.j - 1].getType() == Cell::CellType::END) && !visited[cell.i][cell.j - 1]) {
+            cells.push({ cell.i, cell.j - 1 });
+            trace[cell.i][cell.j - 1] = cell;
+            valid[cell.i][cell.j - 1] = true;
+            if (grid[cell.i][cell.j - 1].getType() == Cell::CellType::EMPTY) {
+                grid[cell.i][cell.j - 1].setFillColor(YELLOW);
+            }
+        }
+
+        if (cell.j + 1 < GRID_SIZE && (grid[cell.i][cell.j + 1].getType() == Cell::CellType::EMPTY || grid[cell.i][cell.j + 1].getType() == Cell::CellType::END) && !visited[cell.i][cell.j + 1]) {
+            cells.push({ cell.i, cell.j + 1 });
+            trace[cell.i][cell.j + 1] = cell;
+            valid[cell.i][cell.j + 1] = true;
+            if (grid[cell.i][cell.j + 1].getType() == Cell::CellType::EMPTY) {
+                grid[cell.i][cell.j + 1].setFillColor(YELLOW);
+            }
+        }
+
+        return false;
+    }
+
+    return false;
+}
+
+bool step_dfs(std::stack<Point> &cells, Cell grid[GRID_SIZE][GRID_SIZE], bool visited[GRID_SIZE][GRID_SIZE], Point trace[GRID_SIZE][GRID_SIZE], bool valid[GRID_SIZE][GRID_SIZE], Point end_cell) {
+    if (!cells.empty()) {
+        Point cell = cells.top();
+        cells.pop();
+
+        if (cell.i == end_cell.i && cell.j == end_cell.j) {
+            return true;
+        }
+
+        if (visited[cell.i][cell.j]) {
+            return false;
+        }
+
+        visited[cell.i][cell.j] = true;
+        if (grid[cell.i][cell.j].getType() == Cell::CellType::EMPTY) {
+            grid[cell.i][cell.j].setFillColor(BLUE);
+        }
+
+        if (cell.i - 1 >= 0 && (grid[cell.i - 1][cell.j].getType() == Cell::CellType::EMPTY || grid[cell.i - 1][cell.j].getType() == Cell::CellType::END) && !visited[cell.i - 1][cell.j]) {
+            cells.push({ cell.i - 1, cell.j });
+            trace[cell.i - 1][cell.j] = cell;
+            valid[cell.i - 1][cell.j] = true;
+            if (grid[cell.i - 1][cell.j].getType() == Cell::CellType::EMPTY) {
+                grid[cell.i - 1][cell.j].setFillColor(YELLOW);
+            }
+        }
+
+        if (cell.i + 1 < GRID_SIZE && (grid[cell.i + 1][cell.j].getType() == Cell::CellType::EMPTY || grid[cell.i + 1][cell.j].getType() == Cell::CellType::END) && !visited[cell.i + 1][cell.j]) {
+            cells.push({ cell.i + 1, cell.j });
+            trace[cell.i + 1][cell.j] = cell;
+            valid[cell.i + 1][cell.j] = true;
+            if (grid[cell.i + 1][cell.j].getType() == Cell::CellType::EMPTY) {
+                grid[cell.i + 1][cell.j].setFillColor(YELLOW);
+            }
+        }
+
+        if (cell.j - 1 >= 0 && (grid[cell.i][cell.j - 1].getType() == Cell::CellType::EMPTY || grid[cell.i][cell.j - 1].getType() == Cell::CellType::END) && !visited[cell.i][cell.j - 1]) {
+            cells.push({ cell.i, cell.j - 1 });
+            trace[cell.i][cell.j - 1] = cell;
+            valid[cell.i][cell.j - 1] = true;
+            if (grid[cell.i][cell.j - 1].getType() == Cell::CellType::EMPTY) {
+                grid[cell.i][cell.j - 1].setFillColor(YELLOW);
+            }
+        }
+
+        if (cell.j + 1 < GRID_SIZE && (grid[cell.i][cell.j + 1].getType() == Cell::CellType::EMPTY || grid[cell.i][cell.j + 1].getType() == Cell::CellType::END) && !visited[cell.i][cell.j + 1]) {
+            cells.push({ cell.i, cell.j + 1 });
+            trace[cell.i][cell.j + 1] = cell;
+            valid[cell.i][cell.j + 1] = true;
+            if (grid[cell.i][cell.j + 1].getType() == Cell::CellType::EMPTY) {
+                grid[cell.i][cell.j + 1].setFillColor(YELLOW);
+            }
+        }
+
+        return false;
+    }
+
+    return false;
+}
+
 int main() {
     // Initialize the basic window.
     InitWindow(INITIAL_WIDTH, INITIAL_HEIGHT, WINDOW_TITLE);
-    SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
+    //SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
     Cell grid[GRID_SIZE][GRID_SIZE];
@@ -26,9 +146,12 @@ int main() {
     Point start_cell = { -1, -1 };
     Point end_cell = { -1, -1 };
 
-    bool run_bfs = false;
-    bool run_dfs = false;
-    bool run_dijkstra = false;
+    bool run_path_search = false;
+
+    std::queue<Point> cells;
+    bool visited[GRID_SIZE][GRID_SIZE] = { false };
+    bool valid[GRID_SIZE][GRID_SIZE] = { false };
+    Point trace[GRID_SIZE][GRID_SIZE];
 
     while (!WindowShouldClose()) {
         // Start preparing the frame buffer for drawing.
@@ -37,11 +160,8 @@ int main() {
         // Clear the window from the previous drawings.
         ClearBackground(DARKGRAY);
 
-        int window_width = GetRenderWidth();
-        int window_height = GetRenderHeight();
-
-        int cell_width = ceil(1.0 * window_width / (GRID_SIZE - 1));
-        int cell_height = ceil(1.0 * window_height / (GRID_SIZE - 1));
+        int window_width = GetRenderWidth(), window_height = GetRenderHeight();
+        int cell_width = ceil(1.0 * window_width / (GRID_SIZE - 1)), cell_height = ceil(1.0 * window_height / (GRID_SIZE - 1));
 
         for (int i = 0; i < GRID_SIZE; ++i) {
             for (int j = 0; j < GRID_SIZE; ++j) {
@@ -49,10 +169,28 @@ int main() {
             }
         }
 
+        if (run_path_search) {
+            if (step_bfs(cells, grid, visited, trace, valid, end_cell)) {
+                Point p = end_cell;
+                while (valid[p.i][p.j]) {
+                    p = trace[p.i][p.j];
+                    if (!(p.i == start_cell.i && p.j == start_cell.j)) {
+                        grid[p.i][p.j].setFillColor(ORANGE);
+                    }
+                }
+                run_path_search = false;
+            }
+        }
+
         // Send the frame buffer for drawing on the screen.
         EndDrawing();
 
-        if (!run_bfs && !run_dfs && !run_dijkstra) {
+        if (IsKeyPressed(KEY_SPACE)) {
+            run_path_search = !run_path_search;
+            cells.push(start_cell);
+        }
+
+        if (!run_path_search) {
             MousePickWalls(grid, cell_width, cell_height, window_width, window_height);
             MousePickStartEnd(grid, cell_width, cell_height, start_cell, end_cell);
         }
