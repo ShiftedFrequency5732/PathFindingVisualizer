@@ -18,6 +18,22 @@ Grid::Grid(int grid_size) {
     this->end_cell = Point(-1, -1);
 }
 
+int Grid::getSize() {
+    return this->grid_size;
+}
+
+Point Grid::GetStartCell() {
+    return this->start_cell;
+}
+
+Point Grid::GetEndCell() {
+    return this->end_cell;
+}
+
+Cell& Grid::GetCell(int i, int j) {
+    return this->matrix[i][j];
+}
+
 void Grid::SetMargin(int margin) {
     this->margin = margin;
 }

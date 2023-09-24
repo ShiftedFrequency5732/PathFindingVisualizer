@@ -11,6 +11,12 @@ public:
     void SetCellSize(int cell_width, int cell_height);
     void SetWindowSize(int window_width, int window_height);
 
+    int getSize();
+
+    Point GetStartCell();
+    Point GetEndCell();
+    Cell& GetCell(int i, int j);
+
     void HandleMouseEvents();
     void Draw();
 
