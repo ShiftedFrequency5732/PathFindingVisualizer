@@ -8,6 +8,7 @@
 #include "../include/bfs.hpp"
 #include "../include/dfs.hpp"
 #include "../include/dijkstra.hpp"
+#include "../include/astar.hpp"
 
 #include "../include/raylib.h"
 #include "../include/raymath.h"
@@ -26,6 +27,7 @@ int main() {
     BFS bfs_algorithm(&grid);
     DFS dfs_algorithm(&grid);
     Dijkstra dijkstras_algorithm(&grid);
+    AStar astar_algorithm(&grid);
 
     Algorithm* path_finding = &bfs_algorithm;
     bool path_search = false;
@@ -69,6 +71,10 @@ int main() {
         else if (IsKeyPressed(KEY_THREE) && !path_search) {
             path_finding->Reset();
             path_finding = &dijkstras_algorithm;
+        }
+        else if (IsKeyPressed(KEY_FOUR) && !path_search) {
+            path_finding->Reset();
+            path_finding = &astar_algorithm;
         }
 
         if(IsKeyPressed(KEY_SPACE)) {

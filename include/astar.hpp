@@ -7,15 +7,15 @@
 #include "../include/algorithm.hpp"
 #include "../include/distance_priority_queue.hpp"
 
-class Dijkstra : public Algorithm {
+class AStar : public Algorithm {
 private:
     DistanceQueue cells;
 
-    int** distance;
+    int** gValue;
     bool prepared = false;
 
 public:
-    Dijkstra(Grid* grid);
+    AStar(Grid* grid);
 
     void Prepare();
     bool Step();
