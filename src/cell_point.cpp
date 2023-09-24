@@ -23,6 +23,7 @@ CellPoint CellPoint::GetNextNeighbor() {
     CellPoint points[] = { CellPoint(this->i - 1, this->j), CellPoint(this->i + 1, this->j), CellPoint(this->i, this->j - 1), CellPoint(this->i, this->j + 1) };
 
     while (this->head < 4) {
+        // Pick the first neighbor we didn't that is valid. The head points to the neighbor that we can pick if it is valid.
         if (points[this->head].IsValid()) {
             return points[this->head++];
         }
