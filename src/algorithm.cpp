@@ -5,15 +5,15 @@ Algorithm::Algorithm(Grid* grid) {
         this->grid = grid;
 
         this->visited = new CellState*[this->grid->getSize()];
-        this->trace = new Point*[this->grid->getSize()];
+        this->trace = new CellPoint*[this->grid->getSize()];
 
         for (int i = 0; i < this->grid->getSize(); ++i) {
             this->visited[i] = new CellState[this->grid->getSize()];
-            this->trace[i] = new Point[this->grid->getSize()];            
+            this->trace[i] = new CellPoint[this->grid->getSize()];            
 
             for (int j = 0; j < this->grid->getSize(); ++j) {
                 this->visited[i][j] = CellState::UNVISITED;
-                this->trace[i][j] = Point(-1, -1);
+                this->trace[i][j] = CellPoint(-1, -1);
             }
         }
     }
@@ -26,13 +26,13 @@ bool Algorithm::IsDone() {
 }
 
 void Algorithm::GetPath() {
-    Point invalid(-1, -1);
+    CellPoint invalid(-1, -1);
 
-    Point current = this->grid->GetEndCell();
-    while (this->trace[current.getI()][current.getJ()] != invalid) {
-        current = this->trace[current.getI()][current.getJ()];
-        if (current != this->grid->GetStartCell()) {
-            this->grid->GetCell(current.getI(), current.getJ()).SetFillColor(ORANGE);
+    CellPoint curr = this->grid->GetEndCellPoint();
+    while (this->trace[curr.GetI()][curr.GetJ()] != invalid) {
+        curr = this->trace[curr.GetI()][curr.GetJ()];
+        if (curr != this->grid->GetStartCellPoint()) {
+            this->grid->GetCell(curr.GetI(), curr.GetJ()).SetFillColor(ORANGE);
         }
     }
 
@@ -40,10 +40,13 @@ void Algorithm::GetPath() {
 }
 
 void Algorithm::ResetGrid() {
-    for(int i = 0; i < this->grid->getSize(); ++i) {
-        for(int j = 0; j < this->grid->getSize(); ++j) {
-            if(this->visited[i][j] != CellState::UNVISITED) {
-                this->grid->GetCell(i, j).SetType(Cell::CellType::EMPTY);
+    for (int i = 0; i < this->grid->getSize(); ++i) {
+        for (int j = 0; j < this->grid->getSize(); ++j) {
+            if (this->visited[i][j] != CellState::UNVISITED) {
+                Cell curr = this->grid->GetCell(i, j);
+                if (curr.GetType() == Cell::CellType::EMPTY) {
+                    curr.SetType(Cell::CellType::EMPTY);
+                }
                 this->visited[i][j] = CellState::UNVISITED;
             }
         }

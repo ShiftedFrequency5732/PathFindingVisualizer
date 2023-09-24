@@ -1,15 +1,16 @@
 #pragma once
 
 #include "../include/cell.hpp"
-#include "../include/point.hpp"
+#include "../include/cell_point.hpp"
 #include "../include/grid.hpp"
 
 class Algorithm {
 protected:
     enum class CellState { UNVISITED, PROCESSING, VISITED };
+
     Grid* grid;
     CellState** visited;
-    Point** trace;
+    CellPoint** trace;
 
     bool finished;
 
