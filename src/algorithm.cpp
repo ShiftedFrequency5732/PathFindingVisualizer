@@ -29,10 +29,10 @@ void Algorithm::GetPath() {
     CellPoint invalid(-1, -1);
 
     CellPoint curr = this->grid->GetEndCellPoint();
-    while (this->trace[curr.GetI()][curr.GetJ()] != invalid) {
-        curr = this->trace[curr.GetI()][curr.GetJ()];
+    while (this->trace[curr.I()][curr.J()] != invalid) {
+        curr = this->trace[curr.I()][curr.J()];
         if (curr != this->grid->GetStartCellPoint()) {
-            this->grid->GetCell(curr.GetI(), curr.GetJ()).SetFillColor(ORANGE);
+            this->grid->GetCell(curr.I(), curr.J()).SetFillColor(ORANGE);
         }
     }
 

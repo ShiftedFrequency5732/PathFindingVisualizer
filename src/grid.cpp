@@ -11,6 +11,9 @@ Grid::Grid(int grid_size) {
     this->matrix = new Cell*[grid_size];
     for (int i = 0; i < grid_size; ++i) {
         this->matrix[i] = new Cell[grid_size];
+        for (int j = 0; j < grid_size; ++j) {
+            this->matrix[i][j].SetType(Cell::CellType::EMPTY);
+        }
     }
 
     // At start we do not have any start and end cells.
@@ -77,7 +80,7 @@ void Grid::MousePickStartOrEndCell() {
 
             if (ref_cell != CellPoint(-1, -1)) {
                 // In case we set the start or the end cell in the past remove it. We want to have only one start and end cell.
-                matrix[ref_cell.GetI()][ref_cell.GetJ()].SetType(Cell::CellType::EMPTY);
+                matrix[ref_cell.I()][ref_cell.J()].SetType(Cell::CellType::EMPTY);
             }
 
             // Remember the new position of the cell, and set its type in the matrix.

@@ -6,7 +6,7 @@
 
 class Algorithm {
 protected:
-    enum class CellState { UNVISITED, PROCESSING, VISITED };
+    enum class CellState { UNVISITED, TOVISIT, VISITED };
 
     Grid* grid;
     CellState** visited;
@@ -21,6 +21,7 @@ public:
     virtual void GetPath();
     virtual void ResetGrid();
 
+    virtual void Prepare() = 0;
     virtual bool Step() = 0;
 
     virtual ~Algorithm();

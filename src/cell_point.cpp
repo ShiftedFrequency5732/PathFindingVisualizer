@@ -1,16 +1,35 @@
 #include "../include/cell_point.hpp"
+#include "../include/config.hpp"
 
 CellPoint::CellPoint(int i, int j) {
+    this->head = 0;
     this->i = i;
     this->j = j;
 }
 
-int CellPoint::GetI() const {
+int CellPoint::I() const {
     return this->i;
 }
 
-int CellPoint::GetJ() const {
+int CellPoint::J() const {
     return this->j;
+}
+
+bool CellPoint::IsValid() {
+    return (this->i >= 0 && this->i < GRID_SIZE && this->j >= 0 && this->j < GRID_SIZE);
+}
+
+CellPoint CellPoint::GetNextNeighbor() {
+    CellPoint points[] = { CellPoint(this->i - 1, this->j), CellPoint(this->i + 1, this->j), CellPoint(this->i, this->j - 1), CellPoint(this->i, this->j + 1) };
+
+    while (this->head < 4) {
+        if (points[this->head].IsValid()) {
+            return points[this->head++];
+        }
+        ++this->head;
+    }
+
+    return CellPoint(-1, -1);
 }
 
 bool operator == (const CellPoint& a, const CellPoint& b) {
