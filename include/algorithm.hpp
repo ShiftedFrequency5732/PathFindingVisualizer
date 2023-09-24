@@ -9,6 +9,8 @@ protected:
     enum class CellState { UNVISITED, TOVISIT, VISITED };
 
     Grid* grid;
+    int grid_size; 
+
     CellState** visited;
     CellPoint** trace;
 
@@ -19,7 +21,7 @@ public:
 
     virtual bool IsDone();
     virtual void GetPath();
-    virtual void ResetGrid();
+    virtual void Reset();
 
     virtual void Prepare() = 0;
     virtual bool Step() = 0;

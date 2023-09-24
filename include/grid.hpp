@@ -7,11 +7,11 @@ class Grid {
 public:
     Grid(int grid_size);
 
+    int GetSize();
+
     void SetMargin(int margin);
     void SetCellSize(int cell_width, int cell_height);
     void SetWindowSize(int window_width, int window_height);
-
-    int getSize();
 
     CellPoint GetStartCellPoint();
     CellPoint GetEndCellPoint();

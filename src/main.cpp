@@ -5,6 +5,7 @@
 #include "../include/cell_point.hpp"
 #include "../include/grid.hpp"
 #include "../include/bfs.hpp"
+#include "../include/dfs.hpp"
 
 #include "../include/raylib.h"
 #include "../include/raymath.h"
@@ -21,8 +22,10 @@ int main() {
     Grid grid(GRID_SIZE);
     grid.SetMargin(MARGIN_PX);
 
-    BFS b(&grid);
+    BFS bfs_algorithm(&grid);
+    DFS dfs_algorithm(&grid);
 
+    Algorithm* path_finding = &bfs_algorithm;
     bool path_search = false;
 
     while (!WindowShouldClose()) {
@@ -36,8 +39,8 @@ int main() {
         int cell_height = ceil(1.0 * GetRenderHeight() / (GRID_SIZE - 1));
 
         if(path_search) {
-            if(!b.Step()) {
-                b.GetPath();
+            if(path_finding->Step()) {
+                path_finding->GetPath();
                 path_search = false;
             }
         }
@@ -53,10 +56,24 @@ int main() {
         // Handle all the mouse events in the grid.
         grid.HandleMouseEvents();
 
+        if(IsKeyPressed(KEY_ONE) && !path_search) {
+            path_finding->Reset();
+            path_finding = &bfs_algorithm;
+        }
+        else if (IsKeyPressed(KEY_TWO) && !path_search) {
+            path_finding->Reset();
+            path_finding = &dfs_algorithm;
+        }
 
         if(IsKeyPressed(KEY_SPACE)) {
-            path_search = !path_search;
-            b.Prepare();
+            if (path_finding->IsDone()) {
+                path_finding->Reset();
+                path_search = false;
+            }
+            else {
+                path_search = !path_search;
+                path_finding->Prepare();
+            }
         }
     }
 

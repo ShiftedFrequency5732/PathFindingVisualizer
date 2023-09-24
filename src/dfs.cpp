@@ -1,20 +1,20 @@
-#include "../include/bfs.hpp"
+
+#include "../include/dfs.hpp"
 #include <iostream>
 
-static void clear(std::queue<CellPoint> &cells) {
-    std::queue<CellPoint> clean_queue;
+static void clear(std::stack<CellPoint> &cells) {
+    std::stack<CellPoint> clean_queue;
     std::swap(cells, clean_queue);
 }
 
-void BFS::Prepare() {
+void DFS::Prepare() {
     clear(this->cells);
     cells.push(grid->GetStartCellPoint());
 }
 
-bool BFS::Step() {
-    std::cout << "TEST";
+bool DFS::Step() {
     if (!cells.empty()) {
-        CellPoint cell = cells.front();
+        CellPoint cell = cells.top();
         cells.pop();
 
         if (cell == this->grid->GetEndCellPoint()) {
@@ -38,7 +38,7 @@ bool BFS::Step() {
             }
             Cell& neighbor_cell = this->grid->GetCell(neighbor.I(), neighbor.J());
 
-            if (neighbor_cell.GetType() != Cell::CellType::WALL && visited[neighbor.I()][neighbor.J()] == CellState::UNVISITED) {
+            if (neighbor_cell.GetType() != Cell::CellType::WALL && visited[neighbor.I()][neighbor.J()] != CellState::VISITED) {
                 trace[neighbor.I()][neighbor.J()] = cell;
                 visited[neighbor.I()][neighbor.J()] = CellState::TOVISIT;
                 if(neighbor_cell.GetType() == Cell::CellType::EMPTY) {
