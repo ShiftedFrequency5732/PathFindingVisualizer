@@ -1,8 +1,4 @@
-#include <iostream>
-
 #include "../include/config.hpp"
-#include "../include/cell.hpp"
-#include "../include/cell_point.hpp"
 #include "../include/grid.hpp"
 
 #include "../include/bfs.hpp"
@@ -12,7 +8,6 @@
 
 #include "../include/raylib.h"
 #include "../include/raymath.h"
-#include "../include/rlgl.h"
 
 int main() {
     // Initialize the basic window, set the width, the height, the title, the target FPS, and make it resizable.
@@ -20,17 +15,20 @@ int main() {
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 
+    // Boolean flag that will indicate whether to show the help text.
+    bool show_help = true;
+
     // Create the grid object.
     Grid grid(GRID_SIZE);
     grid.SetMargin(MARGIN_PX);
 
+    // Objects that will perform the path search.
     BFS bfs_algorithm(&grid);
     DFS dfs_algorithm(&grid);
     Dijkstra dijkstras_algorithm(&grid);
     AStar astar_algorithm(&grid);
 
-    bool help = true;
-
+    // Pointer to the currently selected algorithm.
     Algorithm* path_finding = &bfs_algorithm;
     bool path_search = false;
 
@@ -44,8 +42,9 @@ int main() {
         int cell_width = ceil(1.0 * GetRenderWidth() / (GRID_SIZE - 1));
         int cell_height = ceil(1.0 * GetRenderHeight() / (GRID_SIZE - 1));
 
-        if(path_search) {
-            if(path_finding->Step()) {
+        if (path_search) {
+            // Step the current algorithm, in case it has found the path, draw it, and stop the search.
+            if (path_finding->Step()) {
                 path_finding->GetPath();
                 path_search = false;
             }
@@ -56,10 +55,11 @@ int main() {
         grid.SetCellSize(cell_width, cell_height);
         grid.Draw();
 
-        if (help) {
-            Vector2 v = MeasureTextEx(GetFontDefault(), HELP_TEXT, 45, 2.0f);
-            DrawRectangle(GetRenderWidth() / 2 - v.x / 2 - 25 / 2, GetRenderHeight() / 2 - v.y / 2 - 25 / 2, v.x + 25, v.y + 25, WHITE);
-            DrawTextEx(GetFontDefault(), HELP_TEXT, { (float) GetRenderWidth() / 2 - v.x / 2, (float)GetRenderHeight() / 2 - v.y / 2}, 45, 2.0f, BLACK);
+        if (show_help) {
+            // Draw the help box.
+            Vector2 txt_size = MeasureTextEx(GetFontDefault(), HELP_TEXT, FONT_SIZE, SPACING);
+            DrawRectangle(GetRenderWidth() / 2 - txt_size.x / 2 - BG_MARGIN / 2, GetRenderHeight() / 2 - txt_size.y / 2 - BG_MARGIN / 2, txt_size.x + BG_MARGIN, txt_size.y + BG_MARGIN, WHITE);
+            DrawTextEx(GetFontDefault(), HELP_TEXT, { GetRenderWidth() / 2 - txt_size.x / 2, GetRenderHeight() / 2 - txt_size.y / 2 }, FONT_SIZE, SPACING, BLACK);
         }
 
         // Send the frame buffer for drawing on the screen.
@@ -69,10 +69,12 @@ int main() {
         grid.HandleMouseEvents();
 
         if ((IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) && IsKeyPressed(KEY_SLASH)) {
-            help = !help;
+            // In case the question mark has been pressed, stop showing the help text if its currently shown, or start showing it again if it isn't shown.
+            show_help = !show_help;
         }
 
-        if(IsKeyPressed(KEY_ONE) && !path_search) {
+        // Pick a path searching algorithm, and reset the previously picked one.
+        if (IsKeyPressed(KEY_ONE) && !path_search) {
             path_finding->Reset();
             path_finding = &bfs_algorithm;
         }
@@ -89,12 +91,14 @@ int main() {
             path_finding = &astar_algorithm;
         }
 
-        if(IsKeyPressed(KEY_SPACE)) {
+        if (IsKeyPressed(KEY_SPACE)) {
             if (path_finding->IsDone()) {
+                // If we pressed space and the algorithm finished, reset it.
                 path_finding->Reset();
                 path_search = false;
             }
             else {
+                // If we picked a different algorithm to run, prepare it, and start running it.
                 path_finding->Prepare();
                 path_search = true;
             }
