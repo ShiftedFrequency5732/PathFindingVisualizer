@@ -12,7 +12,6 @@ void BFS::Prepare() {
 }
 
 bool BFS::Step() {
-    std::cout << "TEST";
     if (!cells.empty()) {
         CellPoint cell = cells.front();
         cells.pop();

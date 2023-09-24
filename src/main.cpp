@@ -4,13 +4,14 @@
 #include "../include/cell.hpp"
 #include "../include/cell_point.hpp"
 #include "../include/grid.hpp"
+
 #include "../include/bfs.hpp"
 #include "../include/dfs.hpp"
+#include "../include/dijkstra.hpp"
 
 #include "../include/raylib.h"
 #include "../include/raymath.h"
 #include "../include/rlgl.h"
-
 
 int main() {
     // Initialize the basic window, set the width, the height, the title, the target FPS, and make it resizable.
@@ -24,6 +25,7 @@ int main() {
 
     BFS bfs_algorithm(&grid);
     DFS dfs_algorithm(&grid);
+    Dijkstra dijkstras_algorithm(&grid);
 
     Algorithm* path_finding = &bfs_algorithm;
     bool path_search = false;
@@ -64,6 +66,10 @@ int main() {
             path_finding->Reset();
             path_finding = &dfs_algorithm;
         }
+        else if (IsKeyPressed(KEY_THREE) && !path_search) {
+            path_finding->Reset();
+            path_finding = &dijkstras_algorithm;
+        }
 
         if(IsKeyPressed(KEY_SPACE)) {
             if (path_finding->IsDone()) {
@@ -71,8 +77,8 @@ int main() {
                 path_search = false;
             }
             else {
-                path_search = !path_search;
                 path_finding->Prepare();
+                path_search = true;
             }
         }
     }

@@ -46,12 +46,13 @@ void Algorithm::Reset() {
                 if (curr.GetType() == Cell::CellType::EMPTY) {
                     curr.SetType(Cell::CellType::EMPTY);
                 }
-                this->visited[i][j] = CellState::UNVISITED;
-                trace[i][j] = CellPoint(-1, -1);
             }
+            this->visited[i][j] = CellState::UNVISITED;
+            trace[i][j] = CellPoint(-1, -1);
         }
     }
     this->Prepare();
+    this->finished = false;
 }
 
 Algorithm::~Algorithm() {
