@@ -18,4 +18,3 @@ private:
     CellType type;
     Color fill;
 };
-
