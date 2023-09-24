@@ -48,24 +48,24 @@ void Grid::HandleMouseEvents() {
 
 void Grid::MousePickStartEndCell() {
     if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_E)) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        Vector2 curr = { (float)GetMouseX(), (float)GetMouseY() };
+        Vector2 curr = { (float) GetMouseX(), (float) GetMouseY() };
 
-        // Map the mouse position to the matrix of cells.
+        // Map the mouse position to the cell of the matrix.
         int new_i = curr.y / cell_height;
         int new_j = curr.x / cell_width;
 
         if (matrix[new_i][new_j].GetType() == Cell::CellType::EMPTY) {
-            // If the user is holding S, the cell we will work with is start, otherwise he is holding E, then we will work with end cell.
+            // If the user is holding S, the cell we will work with is start, otherwise he is holding E, then we will work with the end cell.
             Cell::CellType type = IsKeyDown(KEY_S) ? Cell::CellType::START : Cell::CellType::END;
             Point& ref_cell = IsKeyDown(KEY_S) ? start_cell : end_cell;
 
-            if (ref_cell != Point()) {
-                // In case we did set in the past start or end cell, remove it. We want to have only one start and end cell.
+            if (ref_cell != Point(-1, -1)) {
+                // In case we set the start or the end cell in the past remove it. We want to have only one start and end cell.
                 matrix[ref_cell.getI()][ref_cell.getJ()].SetType(Cell::CellType::EMPTY);
             }
 
             // Remember the new position of the cell, and set its type in the matrix.
-            ref_cell = { new_i, new_j };
+            ref_cell = Point(new_i, new_j);
             matrix[new_i][new_j].SetType(type);
         }
     }
@@ -85,7 +85,6 @@ void Grid::MouseSetWallEmptyCell() {
         this->mouse_prev = mouse_curr;
         this->mouse_curr = { (float)GetMouseX(), (float)GetMouseY() };
 
-
         if (in_bounds(mouse_prev, window_width, window_height) && in_bounds(mouse_curr, window_width, window_height)) {
             // Calculate the slope of the line between the previous and current mouse position.
             float x_distance = mouse_curr.x - mouse_prev.x;
@@ -100,8 +99,10 @@ void Grid::MouseSetWallEmptyCell() {
                 }
             }
             else if (abs(x_distance) > abs(y_distance)) {
+                int x_min = std::min(mouse_prev.x, mouse_curr.x); 
+                int x_max = std::max(mouse_prev.x, mouse_curr.x);
+
                 // If slope is in range [-1, 1], we will use the y = slope * (x - x0) + y0, to find the y.
-                int x_min = std::min(mouse_prev.x, mouse_curr.x), x_max = std::max(mouse_prev.x, mouse_curr.x);
                 for (int x = x_min; x <= x_max; ++x) {
                     int y = slope * (x - mouse_prev.x) + mouse_prev.y;
                     int new_i = y / cell_height, new_j = x / cell_width;
@@ -111,8 +112,10 @@ void Grid::MouseSetWallEmptyCell() {
                 }
             }
             else {
+                int y_min = std::min(mouse_prev.y, mouse_curr.y);
+                int y_max = std::max(mouse_prev.y, mouse_curr.y);
+
                 // If the slope is not in the range [-1, 1], we will use x = (y - y0) / slope + x0, to find the x.
-                int y_min = std::min(mouse_prev.y, mouse_curr.y), y_max = std::max(mouse_prev.y, mouse_curr.y);
                 for (int y = y_min; y <= y_max; ++y) {
                     int x = (y - mouse_prev.y) / slope + mouse_prev.x;
                     int new_i = y / cell_height, new_j = x / cell_width;
