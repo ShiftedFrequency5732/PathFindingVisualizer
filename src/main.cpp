@@ -29,6 +29,8 @@ int main() {
     Dijkstra dijkstras_algorithm(&grid);
     AStar astar_algorithm(&grid);
 
+    bool help = true;
+
     Algorithm* path_finding = &bfs_algorithm;
     bool path_search = false;
 
@@ -54,11 +56,21 @@ int main() {
         grid.SetCellSize(cell_width, cell_height);
         grid.Draw();
 
+        if (help) {
+            Vector2 v = MeasureTextEx(GetFontDefault(), HELP_TEXT, 45, 2.0f);
+            DrawRectangle(GetRenderWidth() / 2 - v.x / 2 - 25 / 2, GetRenderHeight() / 2 - v.y / 2 - 25 / 2, v.x + 25, v.y + 25, WHITE);
+            DrawTextEx(GetFontDefault(), HELP_TEXT, { (float) GetRenderWidth() / 2 - v.x / 2, (float)GetRenderHeight() / 2 - v.y / 2}, 45, 2.0f, BLACK);
+        }
+
         // Send the frame buffer for drawing on the screen.
         EndDrawing();
 
         // Handle all the mouse events in the grid.
         grid.HandleMouseEvents();
+
+        if ((IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) && IsKeyPressed(KEY_SLASH)) {
+            help = !help;
+        }
 
         if(IsKeyPressed(KEY_ONE) && !path_search) {
             path_finding->Reset();
