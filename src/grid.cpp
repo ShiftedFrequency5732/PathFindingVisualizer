@@ -18,7 +18,7 @@ Grid::Grid(int grid_size) {
     this->end_cell = Point(-1, -1);
 }
 
-void Grid::SetGridMargin(int margin) {
+void Grid::SetMargin(int margin) {
     this->margin = margin;
 }
 
@@ -32,7 +32,7 @@ void Grid::SetWindowSize(int window_width, int window_height) {
     this->window_height = window_height;
 }
 
-void Grid::DrawGrid() {
+void Grid::Draw() {
     // Draw the matrix with margins between the cells.
     for (int i = 0; i < this->grid_size; ++i) {
         for (int j = 0; j < this->grid_size; ++j) {
@@ -42,11 +42,11 @@ void Grid::DrawGrid() {
 }
 
 void Grid::HandleMouseEvents() {
-    this->MousePickStartEndCell();
-    this->MouseSetWallEmptyCell();
+    this->MousePickStartOrEndCell();
+    this->MouseDrawWallOrEmptyCells();
 }
 
-void Grid::MousePickStartEndCell() {
+void Grid::MousePickStartOrEndCell() {
     if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_E)) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         Vector2 curr = { (float) GetMouseX(), (float) GetMouseY() };
 
@@ -75,13 +75,14 @@ static bool in_bounds(Vector2 pos, int x_max, int y_max) {
     return (pos.x >= 0 && pos.x <= x_max && pos.y >= 0 && pos.y <= y_max);
 }
 
-void Grid::MouseSetWallEmptyCell() {
+void Grid::MouseDrawWallOrEmptyCells() {
     if ((IsKeyDown(KEY_W) || IsKeyDown(KEY_N)) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
         // If the user is holding W, we will place walls on the empty cells, otherwise we will place empty cells on the wall cells.
         Cell::CellType type = IsKeyDown(KEY_W) ? Cell::CellType::WALL : Cell::CellType::EMPTY;
         Cell::CellType opposite_type = (type == Cell::CellType::WALL) ? Cell::CellType::EMPTY : Cell::CellType::WALL;
 
-        // Remember the previous mouse position along with the current one. Mouse position on one frame can be at (0, 0), and on the next frame at (1000, 1000), due to FPS target.
+        // Remember the previous mouse position as well as the current one. Position on one frame can be at (0, 0), and on the next frame at (1000, 1000), due to the target FPS.
+        // We want to fill all the cells in between these two positions, so that we get the continuous line.
         this->mouse_prev = mouse_curr;
         this->mouse_curr = { (float)GetMouseX(), (float)GetMouseY() };
 

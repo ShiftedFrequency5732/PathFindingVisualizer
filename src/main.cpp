@@ -223,7 +223,7 @@ int main() {
 
     // Create grid object.
     Grid grid(GRID_SIZE);
-    grid.SetGridMargin(MARGIN_PX);
+    grid.SetMargin(MARGIN_PX);
 
     while (!WindowShouldClose()) {
         // Start preparing the frame buffer for drawing, clear the window from the previous drawing.
@@ -238,7 +238,7 @@ int main() {
         // Update the information on the window size and cell size of the grid in case user resized the window. Draw the grid.
         grid.SetWindowSize(GetRenderWidth(), GetRenderHeight());
         grid.SetCellSize(cell_width, cell_height);
-        grid.DrawGrid();
+        grid.Draw();
 
         // Send the frame buffer for drawing on the screen.
         EndDrawing();
