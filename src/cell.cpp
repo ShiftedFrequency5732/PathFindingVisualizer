@@ -40,4 +40,3 @@ void Cell::SetFillColor(Color fill) {
 Color Cell::GetFillColor() const {
     return this->fill;
 }
-
