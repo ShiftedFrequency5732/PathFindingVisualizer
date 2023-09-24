@@ -14,24 +14,8 @@ Grid::Grid(int grid_size) {
     }
 
     // At start we do not have any start and end cells.
-    this->start_cell = Point(-1, -1);
-    this->end_cell = Point(-1, -1);
-}
-
-int Grid::getSize() {
-    return this->grid_size;
-}
-
-Point Grid::GetStartCell() {
-    return this->start_cell;
-}
-
-Point Grid::GetEndCell() {
-    return this->end_cell;
-}
-
-Cell& Grid::GetCell(int i, int j) {
-    return this->matrix[i][j];
+    this->start_cell = CellPoint(-1, -1);
+    this->end_cell = CellPoint(-1, -1);
 }
 
 void Grid::SetMargin(int margin) {
@@ -46,6 +30,22 @@ void Grid::SetCellSize(int cell_width, int cell_height) {
 void Grid::SetWindowSize(int window_width, int window_height) {
     this->window_width = window_width;
     this->window_height = window_height;
+}
+
+int Grid::getSize() {
+    return this->grid_size;
+}
+
+CellPoint Grid::GetStartCellPoint() {
+    return this->start_cell;
+}
+
+CellPoint Grid::GetEndCellPoint() {
+    return this->end_cell;
+}
+
+Cell& Grid::GetCell(int i, int j) {
+    return this->matrix[i][j];
 }
 
 void Grid::Draw() {
@@ -73,15 +73,15 @@ void Grid::MousePickStartOrEndCell() {
         if (matrix[new_i][new_j].GetType() == Cell::CellType::EMPTY) {
             // If the user is holding S, the cell we will work with is start, otherwise he is holding E, then we will work with the end cell.
             Cell::CellType type = IsKeyDown(KEY_S) ? Cell::CellType::START : Cell::CellType::END;
-            Point& ref_cell = IsKeyDown(KEY_S) ? start_cell : end_cell;
+            CellPoint& ref_cell = IsKeyDown(KEY_S) ? start_cell : end_cell;
 
-            if (ref_cell != Point(-1, -1)) {
+            if (ref_cell != CellPoint(-1, -1)) {
                 // In case we set the start or the end cell in the past remove it. We want to have only one start and end cell.
-                matrix[ref_cell.getI()][ref_cell.getJ()].SetType(Cell::CellType::EMPTY);
+                matrix[ref_cell.GetI()][ref_cell.GetJ()].SetType(Cell::CellType::EMPTY);
             }
 
             // Remember the new position of the cell, and set its type in the matrix.
-            ref_cell = Point(new_i, new_j);
+            ref_cell = CellPoint(new_i, new_j);
             matrix[new_i][new_j].SetType(type);
         }
     }

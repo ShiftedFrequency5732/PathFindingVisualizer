@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../include/cell.hpp"
-#include "../include/point.hpp"
+#include "../include/cell_point.hpp"
 
 class Grid {
 public:
@@ -13,8 +13,8 @@ public:
 
     int getSize();
 
-    Point GetStartCell();
-    Point GetEndCell();
+    CellPoint GetStartCellPoint();
+    CellPoint GetEndCellPoint();
     Cell& GetCell(int i, int j);
 
     void HandleMouseEvents();
@@ -30,7 +30,7 @@ private:
     int cell_width, cell_height;
     int window_width, window_height;
 
-    Point start_cell, end_cell;
+    CellPoint start_cell, end_cell;
     Vector2 mouse_prev, mouse_curr;
 
     void MousePickStartOrEndCell();
