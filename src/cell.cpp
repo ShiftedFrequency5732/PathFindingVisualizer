@@ -6,7 +6,7 @@ Cell::Cell() {
     this->fill = BLACK;
 }
 
-void Cell::setType(CellType type) {
+void Cell::SetType(CellType type) {
     this->type = type;
 
     // If you change the type of cell, you also change its fill color.
@@ -14,27 +14,30 @@ void Cell::setType(CellType type) {
         case CellType::WALL:
             this->fill = WHITE;
             break;
+
         case CellType::START:
             this->fill = GREEN;
             break;
+
         case CellType::END:
             this->fill = RED;
             break;
+
         default:
             this->fill = BLACK;
             break;
     }
 }
 
-Cell::CellType Cell::getType() const {
+Cell::CellType Cell::GetType() const {
     return this->type;
 }
 
-void Cell::setFillColor(Color fill) {
+void Cell::SetFillColor(Color fill) {
     this->fill = fill;
 }
 
-Color Cell::getFillColor() const {
+Color Cell::GetFillColor() const {
     return this->fill;
 }
 

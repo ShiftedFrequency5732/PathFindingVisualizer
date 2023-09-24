@@ -8,11 +8,11 @@ public:
 
     Cell();
 
-    void setType(CellType type);
-    CellType getType() const;
+    void SetType(CellType type);
+    CellType GetType() const;
 
-    void setFillColor(Color fill);
-    Color getFillColor() const;
+    void SetFillColor(Color fill);
+    Color GetFillColor() const;
 
 private:
     CellType type;
