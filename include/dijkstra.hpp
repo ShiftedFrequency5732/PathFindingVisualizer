@@ -1,22 +1,22 @@
 #pragma once
 
-#include <queue>
-#include <vector>
-
-#include "../include/cell_point.hpp"
 #include "../include/algorithm.hpp"
+#include "../include/cell_point.hpp"
 #include "../include/distance_priority_queue.hpp"
 
 class Dijkstra : public Algorithm {
 private:
     DistanceQueue cells;
 
-    int** distance;
+    int distance[GRID_SIZE][GRID_SIZE];
     bool prepared = false;
 
 public:
-    Dijkstra(Grid* grid);
+    static constexpr int MAX_DISTANCE = 10000;
+
+    using Algorithm::Algorithm;
 
     void Prepare();
     bool Step();
 };
+

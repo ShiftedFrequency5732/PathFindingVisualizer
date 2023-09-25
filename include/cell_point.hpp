@@ -17,3 +17,4 @@ public:
     friend bool operator == (const CellPoint& a, const CellPoint& b);
     friend bool operator != (const CellPoint& a, const CellPoint& b);
 };
+

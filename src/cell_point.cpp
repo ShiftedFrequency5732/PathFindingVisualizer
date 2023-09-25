@@ -16,6 +16,7 @@ int CellPoint::J() const {
 }
 
 bool CellPoint::IsValid() {
+    // The CellPoint is valid if it would be in the bounds of the grid.
     return (this->i >= 0 && this->i < GRID_SIZE && this->j >= 0 && this->j < GRID_SIZE);
 }
 
@@ -30,6 +31,7 @@ CellPoint CellPoint::GetNextNeighbor() {
         ++this->head;
     }
 
+    // Return invalid CellPoint if we can't pick anything.
     return CellPoint(-1, -1);
 }
 
@@ -40,3 +42,4 @@ bool operator == (const CellPoint& a, const CellPoint& b) {
 bool operator != (const CellPoint& a, const CellPoint& b) {
     return (a.i != b.i || a.j != b.j);
 }
+

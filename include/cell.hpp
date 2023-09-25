@@ -4,7 +4,7 @@
 
 class Cell {
 public:
-    enum class CellType { EMPTY = 0, WALL = 1, START = 2, END = 3 };
+    enum class CellType { EMPTY, WALL, START, END };
 
     Cell();
 
@@ -18,3 +18,4 @@ private:
     CellType type;
     Color fill;
 };
+

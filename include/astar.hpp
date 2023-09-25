@@ -11,12 +11,15 @@ class AStar : public Algorithm {
 private:
     DistanceQueue cells;
 
-    int** gValue;
+    int gValue[GRID_SIZE][GRID_SIZE];
     bool prepared = false;
 
 public:
-    AStar(Grid* grid);
+    static constexpr int MAX_DISTANCE = 10000;
+
+    using Algorithm::Algorithm;
 
     void Prepare();
     bool Step();
 };
+

@@ -1,25 +1,16 @@
 #include "../include/algorithm.hpp"
-#include <iostream>
 
-Algorithm::Algorithm(Grid* grid) {
-    if (grid) {
-        this->grid = grid;
-        this->grid_size = this->grid->GetSize();
+Algorithm::Algorithm(Grid* map) {
+    this->map = map;
 
-        this->visited = new CellState*[this->grid_size];
-        this->trace = new CellPoint*[this->grid_size];
-
-        for (int i = 0; i < this->grid_size; ++i) {
-            this->visited[i] = new CellState[this->grid_size];
-            this->trace[i] = new CellPoint[this->grid_size];            
-
-            for (int j = 0; j < this->grid_size; ++j) {
-                this->visited[i][j] = CellState::UNVISITED;
-                this->trace[i][j] = CellPoint(-1, -1);
-            }
+    // Initialize the trace matrix, invalid CellPoints will indicate whether there is a previous cell point to visit or not.
+    for (int i = 0; i < GRID_SIZE; ++i) {
+        for (int j = 0; j < GRID_SIZE; ++j) {
+            this->trace[i][j] = CellPoint(-1, -1);
         }
     }
 
+    // At the start, we didn't run the algorithm obviously, so it is not finished.
     this->finished = false;
 }
 
@@ -28,39 +19,40 @@ bool Algorithm::IsDone() {
 }
 
 void Algorithm::GetPath() {
-    CellPoint curr = this->grid->GetEndCellPoint();
-    while (this->trace[curr.I()][curr.J()].IsValid()) {
-        curr = this->trace[curr.I()][curr.J()];
-        if (curr != this->grid->GetStartCellPoint()) {
-            this->grid->GetCell(curr.I(), curr.J()).SetFillColor(ORANGE);
+    if (this->map) {
+        CellPoint curr = this->map->GetEndCellPoint();
+
+        while (this->trace[curr.I()][curr.J()].IsValid()) {
+            curr = this->trace[curr.I()][curr.J()];
+            if (curr != this->map->GetStartCellPoint()) {
+                // Get the previous node of the current end node to visit in order to reach the current end node, color it orange if it isn't the start cell.
+                this->map->GetCell(curr.I(), curr.J()).SetFillColor(ORANGE);
+            }
         }
+
+        this->finished = true;
     }
-    this->finished = true;
 }
 
 void Algorithm::Reset() {
-    for (int i = 0; i < this->grid_size; ++i) {
-        for (int j = 0; j < this->grid_size; ++j) {
+    for (int i = 0; i < GRID_SIZE; ++i) {
+        for (int j = 0; j < GRID_SIZE; ++j) {
             if (this->visited[i][j] != CellState::UNVISITED) {
-                Cell& curr = this->grid->GetCell(i, j);
+                Cell& curr = this->map->GetCell(i, j);
                 if (curr.GetType() == Cell::CellType::EMPTY) {
+                    // If we found a cell that we visited in the past, reset its color through type.
                     curr.SetType(Cell::CellType::EMPTY);
                 }
             }
+
+            // Reset the visited and trace matrix.
             this->visited[i][j] = CellState::UNVISITED;
             trace[i][j] = CellPoint(-1, -1);
         }
     }
+
+    // Preapre the algorithm for the future run.
     this->Prepare();
     this->finished = false;
 }
 
-Algorithm::~Algorithm() {
-    for (int i = 0; i < this->grid->GetSize(); ++i) {
-        delete[] this->visited[i];
-        delete[] this->trace[i];
-    }
-
-    delete[] this->visited;
-    delete[] this->trace;
-}
