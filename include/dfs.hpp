@@ -2,8 +2,8 @@
 
 #include <stack>
 
-#include "../include/cell_point.hpp"
-#include "../include/algorithm.hpp"
+#include "./cell_point.hpp"
+#include "./algorithm.hpp"
 
 class DFS : public Algorithm {
 private:

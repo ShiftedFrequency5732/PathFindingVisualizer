@@ -2,8 +2,8 @@
 
 #include <queue>
 
-#include "../include/cell_point.hpp"
-#include "../include/algorithm.hpp"
+#include "./cell_point.hpp"
+#include "./algorithm.hpp"
 
 class BFS : public Algorithm {
 private:

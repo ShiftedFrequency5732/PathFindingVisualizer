@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../include/raylib.h"
+#include "./raylib.h"
 
 class Cell {
 public:

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../include/cell.hpp"
-#include "../include/cell_point.hpp"
-#include "../include/config.hpp"
+#include "./cell.hpp"
+#include "./cell_point.hpp"
+#include "./config.hpp"
 
 class Grid {
 public:

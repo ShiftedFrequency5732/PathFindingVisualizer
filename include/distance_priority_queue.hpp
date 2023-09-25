@@ -2,7 +2,7 @@
 
 #include <queue>
 
-#include "../include/cell_point.hpp"
+#include "./cell_point.hpp"
 
 // Pair of distance and CellPoint that will be stored in the priority queue.
 typedef std::pair<int, CellPoint> DistanceCell;

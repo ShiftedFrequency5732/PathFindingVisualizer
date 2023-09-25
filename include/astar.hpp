@@ -3,9 +3,9 @@
 #include <queue>
 #include <vector>
 
-#include "../include/cell_point.hpp"
-#include "../include/algorithm.hpp"
-#include "../include/distance_priority_queue.hpp"
+#include "./cell_point.hpp"
+#include "./algorithm.hpp"
+#include "./distance_priority_queue.hpp"
 
 class AStar : public Algorithm {
 private:

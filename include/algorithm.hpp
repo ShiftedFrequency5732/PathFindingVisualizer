@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../include/config.hpp"
-#include "../include/cell.hpp"
-#include "../include/cell_point.hpp"
-#include "../include/grid.hpp"
+#include "./config.hpp"
+#include "./cell.hpp"
+#include "./cell_point.hpp"
+#include "./grid.hpp"
 
 class Algorithm {
 protected:

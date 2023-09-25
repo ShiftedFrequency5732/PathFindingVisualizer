@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../include/algorithm.hpp"
-#include "../include/cell_point.hpp"
-#include "../include/distance_priority_queue.hpp"
+#include "./algorithm.hpp"
+#include "./cell_point.hpp"
+#include "./distance_priority_queue.hpp"
 
 class Dijkstra : public Algorithm {
 private:
