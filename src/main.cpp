@@ -40,11 +40,10 @@ int main() {
         // Clear the screen from the previous drawing.
         ClearBackground(DARKGRAY);
 
-        if (path_search) {
+        if (path_search && !path_finding_algorithm->IsDone()) {
             // Step the current path searching algorithm, in case it has found the path, draw it, and stop the search.
             if (path_finding_algorithm->Step()) {
                 path_finding_algorithm->GetPath();
-                path_search = false;
             }
         }
 
@@ -97,9 +96,10 @@ int main() {
         }
 
         if (IsKeyPressed(KEY_SPACE)) {
-            if (path_finding_algorithm->IsDone()) {
-                // If we pressed space and the algorithm finished, reset it.
+            if (path_search && !path_finding_algorithm->IsDone() || path_finding_algorithm->IsDone()) {
+                // If we pressed space and the algorithm finished, or if the algorithm is running, reset it.
                 path_finding_algorithm->Reset();
+                path_search = false;
             }
             else if (map.GetStartCellPoint().IsValid() && map.GetEndCellPoint().IsValid()) {
                 // If we picked a different algorithm to run, prepare it, and start running it, only if the user has placed the starting and ending cell.
