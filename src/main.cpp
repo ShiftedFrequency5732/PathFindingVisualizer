@@ -96,7 +96,7 @@ int main() {
         }
 
         if (IsKeyPressed(KEY_SPACE)) {
-            if (path_search && !path_finding_algorithm->IsDone() || path_finding_algorithm->IsDone()) {
+            if ((path_search && !path_finding_algorithm->IsDone()) || path_finding_algorithm->IsDone()) {
                 // If we pressed space and the algorithm finished, or if the algorithm is running, reset it.
                 path_finding_algorithm->Reset();
                 path_search = false;
