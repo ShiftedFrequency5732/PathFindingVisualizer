@@ -27,6 +27,9 @@ bool DFS::Step() {
         }
 
         while (this->visited[current_cell.I()][current_cell.J()] == CellState::VISITED) {
+            // If we took out from the stack the cell that we have already visited, try taking another one. If we couldn't find any, that means we have visited all the cells.
+            // Many cells can share neighbors, because of that there would be many empty steps in the process of running this algorithm.
+            // We could have ignored the neighbors that are in the state of TO_VISIT as well instead, in the loop below.
             if (cells.empty()) {
                 return true;
             }
