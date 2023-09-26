@@ -16,14 +16,15 @@ void DFS::Prepare() {
     }
 }
 
-bool DFS::Step() {
+void DFS::Step() {
     if (!cells.empty()) {
         CellPoint current_cell = cells.top();
         cells.pop();
 
         if (current_cell == this->map->GetEndCellPoint()) {
-            // Return true that we have found a path.
-            return true;
+            // If we have found the end cell, set that we are done.
+            this->finished = true;
+            return;
         }
 
         while (this->visited[current_cell.I()][current_cell.J()] == CellState::VISITED) {
@@ -31,7 +32,8 @@ bool DFS::Step() {
             // Many cells can share neighbors, because of that there would be many empty steps in the process of running this algorithm.
             // We could have ignored the neighbors that are in the state of TO_VISIT as well instead, in the loop below.
             if (cells.empty()) {
-                return true;
+                this->finished = true;
+                return;
             }
             current_cell = cells.top();
             cells.pop();
@@ -70,11 +72,11 @@ bool DFS::Step() {
             }
         }
 
-        // As we didn't find the end cell, return false, that we didn't finish.
-        return false;
+        // As we didn't find the end cell, return and try again.
+        return;
     }
 
     // In case the queue is empty, algorithm finished running.
-    return true;
+    this->finished = true;
 }
 

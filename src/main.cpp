@@ -33,6 +33,9 @@ int main() {
     // Boolean flag that will indicate whether to perform the path search or not in the game loop.
     bool path_search = false;
 
+    // Boolean flag that will indicate if we have set the path or not.
+    bool path_found = false;
+
     while (!WindowShouldClose()) {
         // Start preparing the frame buffer for drawing.
         BeginDrawing();
@@ -40,10 +43,14 @@ int main() {
         // Clear the screen from the previous drawing.
         ClearBackground(DARKGRAY);
 
-        if (path_search && !path_finding_algorithm->IsDone()) {
+        if (path_search && !path_found) {
             // Step the current path searching algorithm, in case it has found the path, draw it, and stop the search.
-            if (path_finding_algorithm->Step()) {
+            if (!path_finding_algorithm->IsDone()) {
+                path_finding_algorithm->Step();
+            }
+            else {
                 path_finding_algorithm->GetPath();
+                path_found = true;
             }
         }
 
@@ -106,6 +113,7 @@ int main() {
                 path_finding_algorithm->Prepare();
                 path_search = true;
             }
+            path_found = false;
         }
     }
 

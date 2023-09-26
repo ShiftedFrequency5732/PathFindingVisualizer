@@ -20,19 +20,20 @@ void Dijkstra::Prepare() {
     }
 }
 
-bool Dijkstra::Step() {
+void Dijkstra::Step() {
     if (!cells.empty()) {
         CellPoint current_cell = cells.top().second;
         cells.pop();
 
         if (current_cell == this->map->GetEndCellPoint()) {
-            // Return true that we have found a path.
-            return true;
+            // If we have found the end cell, set that we are done.
+            this->finished = true;
+            return;
         }
 
         if (this->visited[current_cell.I()][current_cell.J()] == CellState::VISITED) {
             // If we have visited this cell, skip the current iteration of the algorithm.
-            return false;
+            return;
         }
 
         // Mark that we visited this cell.
@@ -71,11 +72,11 @@ bool Dijkstra::Step() {
             }
         }
 
-        // As we didn't find the end cell, return false, that we didn't finish.
-        return false;
+        // As we didn't find the end cell, return and try again.
+        return;
     }
 
     // In case the queue is empty, algorithm finished running.
-    return true;
+    this->finished = true;
 }
 

@@ -29,8 +29,6 @@ void Algorithm::GetPath() {
                 this->map->GetCell(curr.I(), curr.J()).SetFillColor(ORANGE);
             }
         }
-
-        this->finished = true;
     }
 }
 

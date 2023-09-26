@@ -20,6 +20,6 @@ public:
     using Algorithm::Algorithm;
 
     void Prepare();
-    bool Step();
+    void Step();
 };
 

@@ -24,8 +24,6 @@ public:
     virtual void Reset();
 
     virtual void Prepare() = 0;
-
-    // This method, should return true, if the path has been found or if the algorithm finished running.
-    virtual bool Step() = 0;
+    virtual void Step() = 0;
 };
 
