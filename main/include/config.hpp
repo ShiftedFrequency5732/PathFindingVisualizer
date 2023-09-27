@@ -13,7 +13,7 @@ namespace Constants {
     constexpr const char* HELP_TEXT = "W + Left Mouse Button - Walls\nN + Left Mouse Button - Empty Cells\nS + Left Mouse Button - Start Cell\nE + Left Mouse Button - End Cell\n1 - Breadth First Search\n2 - Depth First Search\n3 - Dijkstra's Algorithm\n4 - A* Algorithm\nSpace - Run / Stop / Clear\n? - Toggle Help";
 
     // Grid related constants.
-    constexpr int GRID_SIZE = 50;
-    constexpr int MARGIN_PX = 1;
+    constexpr int GRID_SIZE = 150;
+    constexpr int MARGIN_PX = 5;
 }
 

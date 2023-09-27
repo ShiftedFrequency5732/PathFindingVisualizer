@@ -20,6 +20,7 @@ namespace Algorithms {
 
         void HandleMouseEvents();
         void Draw();
+        void MouseZoomPan();
 
     private:
         Cell matrix[GRID_SIZE][GRID_SIZE];
@@ -30,7 +31,13 @@ namespace Algorithms {
 
         CellPoint start_cell, end_cell;
 
+        Vector2 offset, scale;
+
+        Vector2 ScrToWld(Vector2 scr);
+        Vector2 WldToScr(Vector2 wld);
+
         Vector2 mouse_prev, mouse_curr;
+        Vector2 mouse_prev_wld, mouse_curr_wld;
         void MousePickStartOrEndCell();
         void MouseDrawWallOrEmptyCells();
     };

@@ -18,7 +18,7 @@ int main() {
     // Initialize the basic window, set the width, the height, the title, the target FPS, and make it resizable.
     InitWindow(Constants::INITIAL_WIDTH, Constants::INITIAL_HEIGHT, Constants::WINDOW_TITLE);
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-    SetWindowState(FLAG_WINDOW_RESIZABLE);
+    SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
 
     // Boolean flag that will indicate whether to show the help text or not.
     bool show_help = true;
@@ -61,8 +61,8 @@ int main() {
 
         // Calculate the width & height of the cells, so that they all fill the screen completely.
         // In order to ensure that they all will fill the screen, we will ceil the result, and calculate their size as if we had one row and column less.
-        int cell_width = ceil(1.0 * GetRenderWidth() / (GRID_SIZE - 1));
-        int cell_height = ceil(1.0 * GetRenderHeight() / (GRID_SIZE - 1));
+        int cell_width = ceil(1.0 * GetRenderWidth() / (GRID_SIZE / 8 - 1));
+        int cell_height = ceil(1.0 * GetRenderHeight() / (GRID_SIZE / 8 - 1));
 
         // Update the information on the window size and cell size of the grid in case the user resized the window. Draw the grid.
         map.SetWindowSize(GetRenderWidth(), GetRenderHeight());
@@ -83,6 +83,8 @@ int main() {
             // Handle all the mouse events in the grid, only if the search isn't running.
             map.HandleMouseEvents();
         }
+
+        map.MouseZoomPan();
 
         if ((IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) && IsKeyPressed(KEY_SLASH)) {
             // In case the question mark has been pressed, stop showing the help text if its currently shown, or start showing it again if it isn't shown.
