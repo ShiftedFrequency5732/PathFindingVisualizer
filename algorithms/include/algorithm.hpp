@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./config.hpp"
+#include "../../main/include/config.hpp"
 #include "./cell.hpp"
 #include "./cell_point.hpp"
 #include "./grid.hpp"

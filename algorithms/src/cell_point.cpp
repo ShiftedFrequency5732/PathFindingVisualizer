@@ -1,5 +1,5 @@
 #include "../include/cell_point.hpp"
-#include "../include/config.hpp"
+#include "../../main/include/config.hpp"
 
 CellPoint::CellPoint(int i, int j) {
     this->head = 0;

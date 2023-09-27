@@ -2,7 +2,7 @@
 
 #include "./cell.hpp"
 #include "./cell_point.hpp"
-#include "./config.hpp"
+#include "../../main/include/config.hpp"
 
 class Grid {
 public:

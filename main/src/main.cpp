@@ -1,13 +1,13 @@
 #include "../include/config.hpp"
-#include "../include/grid.hpp"
+#include "../../algorithms/include/grid.hpp"
 
-#include "../include/bfs.hpp"
-#include "../include/dfs.hpp"
-#include "../include/dijkstra.hpp"
-#include "../include/astar.hpp"
+#include "../../algorithms/include/bfs.hpp"
+#include "../../algorithms/include/dfs.hpp"
+#include "../../algorithms/include/dijkstra.hpp"
+#include "../../algorithms/include/astar.hpp"
 
-#include "../raylib/include/raylib.h"
-#include "../raylib/include/raymath.h"
+#include "../../raylib/include/raylib.h"
+#include "../../raylib/include/raymath.h"
 
 int main() {
     // Initialize the basic window, set the width, the height, the title, the target FPS, and make it resizable.
