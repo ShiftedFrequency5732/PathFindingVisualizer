@@ -5,6 +5,8 @@
 #include "./cell_point.hpp"
 #include "./grid.hpp"
 
+using Constants::GRID_SIZE;
+
 class Algorithm {
 protected:
     enum class CellState { UNVISITED, TO_VISIT, VISITED };

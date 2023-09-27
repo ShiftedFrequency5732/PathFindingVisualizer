@@ -9,9 +9,14 @@
 #include "../../raylib/include/raylib.h"
 #include "../../raylib/include/raymath.h"
 
+using Constants::BG_MARGIN;
+using Constants::HELP_TEXT;
+using Constants::FONT_SIZE;
+using Constants::SPACING;
+
 int main() {
     // Initialize the basic window, set the width, the height, the title, the target FPS, and make it resizable.
-    InitWindow(INITIAL_WIDTH, INITIAL_HEIGHT, WINDOW_TITLE);
+    InitWindow(Constants::INITIAL_WIDTH, Constants::INITIAL_HEIGHT, Constants::WINDOW_TITLE);
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
     SetWindowState(FLAG_WINDOW_RESIZABLE);
 

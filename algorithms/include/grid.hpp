@@ -4,6 +4,8 @@
 #include "./cell_point.hpp"
 #include "../../main/include/config.hpp"
 
+using Constants::GRID_SIZE;
+
 class Grid {
 public:
     Grid();

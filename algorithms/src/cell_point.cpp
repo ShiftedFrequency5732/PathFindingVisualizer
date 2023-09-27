@@ -1,6 +1,8 @@
 #include "../include/cell_point.hpp"
 #include "../../main/include/config.hpp"
 
+using Constants::GRID_SIZE;
+
 CellPoint::CellPoint(int i, int j) {
     this->head = 0;
     this->i = i;

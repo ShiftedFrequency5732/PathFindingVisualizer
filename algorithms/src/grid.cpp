@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cmath>
 
+using Constants::MARGIN_PX;
+
 Grid::Grid() {
     // At start we do not have any start and end cells.
     this->start_cell = CellPoint(-1, -1);
