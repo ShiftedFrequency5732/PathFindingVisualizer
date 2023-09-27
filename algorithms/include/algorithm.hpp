@@ -7,25 +7,27 @@
 
 using Constants::GRID_SIZE;
 
-class Algorithm {
-protected:
-    enum class CellState { UNVISITED, TO_VISIT, VISITED };
+namespace Algorithms {
+    class Algorithm {
+    protected:
+        enum class CellState { UNVISITED, TO_VISIT, VISITED };
 
-    Grid* map;
+        Grid* map;
 
-    CellState visited[GRID_SIZE][GRID_SIZE];
-    CellPoint trace[GRID_SIZE][GRID_SIZE];
+        CellState visited[GRID_SIZE][GRID_SIZE];
+        CellPoint trace[GRID_SIZE][GRID_SIZE];
 
-    bool finished;
+        bool finished;
 
-public:
-    Algorithm(Grid* map);
+    public:
+        Algorithm(Grid* map);
 
-    virtual bool IsDone();
-    virtual void GetPath();
-    virtual void Reset();
+        virtual bool IsDone();
+        virtual void GetPath();
+        virtual void Reset();
 
-    virtual void Prepare() = 0;
-    virtual void Step() = 0;
-};
+        virtual void Prepare() = 0;
+        virtual void Step() = 0;
+    };
+}
 

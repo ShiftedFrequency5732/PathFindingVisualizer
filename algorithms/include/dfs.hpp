@@ -5,14 +5,16 @@
 #include "./cell_point.hpp"
 #include "./algorithm.hpp"
 
-class DFS : public Algorithm {
-private:
-    std::stack<CellPoint> cells;
+namespace Algorithms {
+    class DFS : public Algorithm {
+    private:
+        std::stack<CellPoint> cells;
 
-public:
-    using Algorithm::Algorithm;
+    public:
+        using Algorithm::Algorithm;
 
-    void Prepare();
-    void Step();
-};
+        void Prepare();
+        void Step();
+    };
+}
 

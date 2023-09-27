@@ -24,16 +24,16 @@ int main() {
     bool show_help = true;
 
     // Create the grid object.
-    Grid map;
+    Algorithms::Grid map;
 
     // Objects that will perform the path search.
-    BFS bfs_algorithm(&map);
-    DFS dfs_algorithm(&map);
-    Dijkstra dijkstras_algorithm(&map);
-    AStar astar_algorithm(&map);
+    Algorithms::BFS bfs_algorithm(&map);
+    Algorithms::DFS dfs_algorithm(&map);
+    Algorithms::Dijkstra dijkstras_algorithm(&map);
+    Algorithms::AStar astar_algorithm(&map);
 
     // Pointer to the currently selected algorithm.
-    Algorithm* path_finding_algorithm = &bfs_algorithm;
+    Algorithms::Algorithm* path_finding_algorithm = &bfs_algorithm;
 
     // Boolean flag that will indicate whether to perform the path search or not in the game loop.
     bool path_search = false;
