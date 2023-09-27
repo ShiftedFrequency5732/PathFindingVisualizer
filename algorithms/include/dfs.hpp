@@ -6,12 +6,12 @@
 #include "./algorithm.hpp"
 
 namespace Algorithms {
-    class DFS : public Algorithm {
+    class DFS : public GraphSearchAlgorithm {
     private:
         std::stack<CellPoint> cells;
 
     public:
-        using Algorithm::Algorithm;
+        using GraphSearchAlgorithm::GraphSearchAlgorithm;
 
         void Prepare();
         void Step();

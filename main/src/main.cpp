@@ -33,7 +33,7 @@ int main() {
     Algorithms::AStar astar_algorithm(&map);
 
     // Pointer to the currently selected algorithm.
-    Algorithms::Algorithm* path_finding_algorithm = &bfs_algorithm;
+    Algorithms::GraphSearchAlgorithm* path_finding_algorithm = &bfs_algorithm;
 
     // Boolean flag that will indicate whether to perform the path search or not in the game loop.
     bool path_search = false;

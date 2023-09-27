@@ -1,7 +1,7 @@
 #include "../include/algorithm.hpp"
 
 namespace Algorithms {
-    Algorithm::Algorithm(Grid* map) {
+    GraphSearchAlgorithm::GraphSearchAlgorithm(Grid* map) {
         this->map = map;
 
         // Initialize the trace matrix, invalid CellPoints will indicate whether there is a previous cell point to visit or not.
@@ -15,11 +15,11 @@ namespace Algorithms {
         this->finished = false;
     }
 
-    bool Algorithm::IsDone() {
+    bool GraphSearchAlgorithm::IsDone() {
         return this->finished;
     }
 
-    void Algorithm::GetPath() {
+    void GraphSearchAlgorithm::GetPath() {
         if (this->map) {
             CellPoint curr = this->map->GetEndCellPoint();
 
@@ -33,7 +33,7 @@ namespace Algorithms {
         }
     }
 
-    void Algorithm::Reset() {
+    void GraphSearchAlgorithm::Reset() {
         for (int i = 0; i < GRID_SIZE; ++i) {
             for (int j = 0; j < GRID_SIZE; ++j) {
                 if (this->visited[i][j] != CellState::UNVISITED) {

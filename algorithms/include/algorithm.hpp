@@ -8,7 +8,7 @@
 using Constants::GRID_SIZE;
 
 namespace Algorithms {
-    class Algorithm {
+    class GraphSearchAlgorithm {
     protected:
         enum class CellState { UNVISITED, TO_VISIT, VISITED };
 
@@ -20,7 +20,7 @@ namespace Algorithms {
         bool finished;
 
     public:
-        Algorithm(Grid* map);
+        GraphSearchAlgorithm(Grid* map);
 
         virtual bool IsDone();
         virtual void GetPath();

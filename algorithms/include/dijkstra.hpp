@@ -5,7 +5,7 @@
 #include "./distance_priority_queue.hpp"
 
 namespace Algorithms {
-    class Dijkstra : public Algorithm {
+    class Dijkstra : public GraphSearchAlgorithm {
     private:
         DistanceQueue cells;
 
@@ -15,7 +15,7 @@ namespace Algorithms {
     public:
         static constexpr int MAX_DISTANCE = 10000;
 
-        using Algorithm::Algorithm;
+        using GraphSearchAlgorithm::GraphSearchAlgorithm;
 
         void Prepare();
         void Step();
