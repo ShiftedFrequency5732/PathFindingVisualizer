@@ -120,6 +120,10 @@ int main() {
             }
             path_found = false;
         }
+
+        if(IsKeyPressed(KEY_R)) {
+            map.Reset();
+        }
     }
 
     return 0;

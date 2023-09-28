@@ -23,6 +23,8 @@ namespace Algorithms {
         void MouseSetStartOrEndCell();
         void MouseSetWallsOrEmptyCells();
 
+        void Reset();
+
     private:
         CellPoint start_cell, end_cell;
 
@@ -37,6 +39,7 @@ namespace Algorithms {
         Vector2 offset, scale;
         Vector2 ScreenToWorld(Vector2 scr);
         Vector2 WorldToScreen(Vector2 wld);
+        float GetGridSize();
     };
 }
 

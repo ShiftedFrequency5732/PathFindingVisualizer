@@ -14,5 +14,8 @@ namespace Constants {
 
     // Grid related constants.
     constexpr int GRID_SIZE = 150;
-    constexpr int GAP_PX = 3;
+    constexpr int GAP_PX = 5;
+    constexpr float ZOOM = 0.10f;
+    constexpr float ZOOM_LOWER_BOUND = 0.01f;
+    constexpr float ZOOM_UPPER_BOUND = 5.0f;
 }

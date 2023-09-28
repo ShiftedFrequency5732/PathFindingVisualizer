@@ -6,6 +6,9 @@
 
 namespace Algorithms {
     using Constants::GAP_PX;
+    using Constants::ZOOM;
+    using Constants::ZOOM_LOWER_BOUND;
+    using Constants::ZOOM_UPPER_BOUND;
 
     Grid::Grid() {
         // At the start we do not have any start cell, nor the end cell.
@@ -44,11 +47,15 @@ namespace Algorithms {
         return (pos.x >= x_min && pos.x <= x_max && pos.y >= y_min && pos.y <= y_max);
     }
 
+    float Grid::GetGridSize() {
+        return (float)(GRID_SIZE * this->cell_size);
+    }
+
     void Grid::Draw() {
         for (int i = 0; i < GRID_SIZE; ++i) {
             for (int j = 0; j < GRID_SIZE; ++j) {
                 // Turn the world position of cell into the screen space, include the grid gap in the calculation, as we want gap between the cells.
-                Vector2 pos = WorldToScreen({ (float) (j * this->cell_size + GAP_PX), (float) (i * this->cell_size + GAP_PX) });
+                Vector2 pos = WorldToScreen({ (float)(j * this->cell_size + GAP_PX) , (float) (i * this->cell_size + GAP_PX) });
 
                 if (in_bounds(pos, -this->cell_size * scale.x, window_width, -this->cell_size * scale.y, window_height)) {
                     // Draw the cell, only if its world position in the screen domain is in the bounds of the window that we are drawing on.
@@ -60,12 +67,16 @@ namespace Algorithms {
         }
     }
 
+    void Grid::Reset() {
+        this->scale = { 1.0f, 1.0f };
+        this->offset = { GetGridSize() / 2 -window_width / 2, GetGridSize() / 2-window_height / 2 };
+    }
     void Grid::MouseSetStartOrEndCell() {
         if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_E)) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             // Take the current position of the mouse (that is in the screen domain), and turn it into the world domain
             Vector2 curr_scr = Vector2({ (float) GetMouseX(), (float) GetMouseY() });
             Vector2 top_left = WorldToScreen({ (float)0, (float)0 });
-            Vector2 bottom_right = WorldToScreen({ (float) GRID_SIZE * this->cell_size + GAP_PX, (float) GRID_SIZE * this->cell_size + GAP_PX });
+            Vector2 bottom_right = WorldToScreen({ GetGridSize(), GetGridSize() });
 
             if (in_bounds(curr_scr, top_left.x, bottom_right.x, top_left.y, bottom_right.y)) {
                 Vector2 curr_wld = ScreenToWorld(curr_scr);
@@ -110,9 +121,8 @@ namespace Algorithms {
                 this->mouse_prev_wld = mouse_curr_wld;
             }
 
-            // Calculate 
             Vector2 top_left = WorldToScreen({ (float)0, (float)0 });
-            Vector2 bottom_right = WorldToScreen({ (float) GRID_SIZE * this->cell_size + GAP_PX, (float) GRID_SIZE * this->cell_size + GAP_PX });
+            Vector2 bottom_right = WorldToScreen({ GetGridSize(), GetGridSize() });
 
             if (in_bounds(mouse_curr, top_left.x, bottom_right.x, top_left.y, bottom_right.y) && in_bounds(mouse_prev, top_left.x, bottom_right.x, top_left.y, bottom_right.y)) {
                 // Calculate the slope of the line between the previous and current mouse position.
@@ -128,7 +138,7 @@ namespace Algorithms {
                     }
                 }
                 else if (abs(x_distance) > abs(y_distance)) {
-                    int x_min = std::min(mouse_prev_wld.x, mouse_curr_wld.x); 
+                    int x_min = std::min(mouse_prev_wld.x, mouse_curr_wld.x);
                     int x_max = std::max(mouse_prev_wld.x, mouse_curr_wld.x);
 
                     // If the slope is in the range [-1, 1], we will use the y = slope * (x - x0) + y0, to find the y, and we will fill all the cells in between current and previous mouse postion.
@@ -177,12 +187,15 @@ namespace Algorithms {
     void Grid::MouseZoomAndPan() {
         Vector2 drag = { (float) GetMouseX(), (float) GetMouseY() };
 
-        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))) {
             // Set the starting point from where we drag.
             this->start_pan = drag;
         }
 
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+        Vector2 top_left = WorldToScreen({ (float)0, (float)0 });
+        Vector2 bottom_right = WorldToScreen({ GetGridSize(), GetGridSize() });
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))) {
             // Calculate the distance between the starting point of when we pressed the mouse, and where we dragged the mouse, also apply the scaling on the distance, as we have zoom as well.
             // If the distance is positive, that means we want to drag the things we see to the right (In WldToScr -offset > 0), and therefore we want to move to the left (offset < 0)
             // If the distance is negative, that means we want to drag things we see to the left (In WldToScr -offset < 0), and therefore we want to move to the right (offset > 0).
@@ -197,13 +210,21 @@ namespace Algorithms {
         Vector2 mouseBeforeZoom = ScreenToWorld(drag);
 
         float scroll = GetMouseWheelMove();
-        if (scroll >= 0.5) {
+        if (scroll >= 0.5 && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))) {
             // If we are scrolling in the positive direction, increase the scale.
-            scale = { scale.x * 1.1f, scale.y * 1.1f };
+            Vector2 old_scale = scale;
+            scale = { scale.x * (1.0f + ZOOM), scale.y * (1.0f + ZOOM) };
+            if (scale.x >= ZOOM_UPPER_BOUND || scale.y >= ZOOM_UPPER_BOUND) {
+                scale = old_scale;
+            }
         }
-        else if (scroll <= -0.5) {
+        else if (scroll <= -0.5 && (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL))) {
             // If we are scrolling in the negative direction, decrease the scale.
-            scale = { scale.x * .9f, scale.y * .9f };
+            Vector2 old_scale = scale;
+            scale = { scale.x * (1.0f - ZOOM), scale.y * (1.0f - ZOOM) };
+            if (scale.x <= ZOOM_LOWER_BOUND || scale.y <= ZOOM_LOWER_BOUND) {
+                scale = old_scale;
+            }
         }
 
         // Get the mouse position in the world domain, after zooming things.
