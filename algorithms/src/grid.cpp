@@ -46,14 +46,18 @@ namespace Algorithms {
     void Grid::Draw() {
         for (int i = 0; i < GRID_SIZE; ++i) {
             for (int j = 0; j < GRID_SIZE; ++j) {
-                // Turn the world position of the cell into the screen domain, include the grid gap in the calculation, as we want the gap between the cells.
-                Vector2 cell_pos = WorldToScreen({ (float)(j * this->cell_size + GAP_PX), (float) (i * this->cell_size + GAP_PX) });
+                // Turn the world position of the cell into the screen domain.
+                Vector2 cell_pos = WorldToScreen({ (float)(j * this->cell_size), (float) (i * this->cell_size) });
+
+                // Include the grid gap in the calculation, as we want the gap between the cells.
+                cell_pos.x += GAP_PX;
+                cell_pos.y += GAP_PX;
 
                 if (in_bounds(cell_pos, { -this->cell_size * this->scale, -this->cell_size * this->scale }, { (float) GetRenderWidth(), (float) GetRenderHeight() })) {
                     // Draw the cell, only if its world position in the screen domain is in the bounds of the window that we are drawing on (Optimisation).
                     // We are checking pos.x >= -cell_size * scale.x and same for pos.y, because if pos.x = -cell_size * scale.x + n, that means we would see n pixel(s) of this cell.
                     // Also take into account the gap size when drawing the cell of the size cell width, as we want to have gap around all sides of the cell, not just the top left corner.
-                    DrawRectangleV(cell_pos, { (this->cell_size - GAP_PX) * this->scale, (this->cell_size - GAP_PX) * this->scale }, matrix[i][j].GetFillColor());
+                    DrawRectangleV(cell_pos, { this->cell_size * this->scale - GAP_PX, this->cell_size * this->scale - GAP_PX }, matrix[i][j].GetFillColor());
                 }
             }
         }
