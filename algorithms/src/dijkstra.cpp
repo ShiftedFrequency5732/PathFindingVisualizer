@@ -1,5 +1,4 @@
 #include "../include/dijkstra.hpp"
-#include <iostream>
 
 namespace Algorithms {
     void Dijkstra::Prepare() {
@@ -54,7 +53,7 @@ namespace Algorithms {
                     if (distance[neighbor.I()][neighbor.J()] > distance[current_cell.I()][current_cell.J()] + 1) {
                         // If the neighbor we found isn't a wall, and if it is unvisited, and if we can get to the neighbor through the current cell with a shorter distance than from the starting cell.
                         // Then store that new distance, and store the current cell as the previous (parent) cell of the neighbor.
-                        this->distance[neighbor.I()][neighbor.J()] = distance[current_cell.I()][current_cell.J()] + 1;
+                        this->distance[neighbor.I()][neighbor.J()] = this->distance[current_cell.I()][current_cell.J()] + 1;
                         this->trace[neighbor.I()][neighbor.J()] = current_cell;
 
                         // In case the neighboring cell is empty, color it yellow to indicate that it will be processed.

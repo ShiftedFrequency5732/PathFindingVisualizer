@@ -1,6 +1,5 @@
 
 #include "../include/dfs.hpp"
-#include <iostream>
 
 namespace Algorithms {
     void DFS::Prepare() {

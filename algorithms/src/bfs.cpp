@@ -43,7 +43,7 @@ namespace Algorithms {
                     this->trace[neighbor.I()][neighbor.J()] = current_cell;
 
                     // Mark that this cell will be visited in the future, and color it yellow if it is empty (isn't start / end cell).
-                    states[neighbor.I()][neighbor.J()] = CellState::TO_VISIT;
+                    this->states[neighbor.I()][neighbor.J()] = CellState::TO_VISIT;
                     if (neighbor_cell.GetType() == Cell::CellType::EMPTY) {
                         neighbor_cell.SetFillColor(YELLOW);
                     }

@@ -8,9 +8,7 @@ namespace Algorithms {
     class Dijkstra : public GraphSearchAlgorithm {
     private:
         DistanceQueue cells;
-
         int distance[GRID_SIZE][GRID_SIZE];
-        bool prepared = false;
 
     public:
         static constexpr int MAX_DISTANCE = 10000;
