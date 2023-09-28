@@ -12,6 +12,7 @@
 using Constants::INITIAL_WIDTH;
 using Constants::INITIAL_HEIGHT;
 using Constants::WINDOW_TITLE;
+
 using Constants::BG_MARGIN;
 using Constants::HELP_TEXT;
 using Constants::FONT_SIZE;
@@ -21,13 +22,18 @@ int main() {
     // Initialize the basic window, set the width, the height, the title, the target FPS, and make it resizable.
     InitWindow(INITIAL_WIDTH, INITIAL_HEIGHT, WINDOW_TITLE);
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-    SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_MAXIMIZED);
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
 
-    // Boolean flag that will indicate whether to show the help text or not.
+    // Boolean flag that indicates whether to show the help text or not.
     bool show_help = true;
 
-    // Create the grid object.
+    // The grid object that holds all the cells.
     Algorithms::Grid map;
+
+    // Calculate the cell size, we want to see 1/8th of all the cells, and set the initial zoom & location at the center.
+    int cell_size = ceil(1.0 * std::max(GetRenderWidth(), GetRenderHeight()) / GRID_SIZE * 8);
+    map.SetCellSize(cell_size);
+    map.ResetZoomAndPan();
 
     // Algorithms that will perform the path search.
     Algorithms::BFS bfs_algorithm(&map);
@@ -35,7 +41,7 @@ int main() {
     Algorithms::Dijkstra dijkstras_algorithm(&map);
     Algorithms::AStar astar_algorithm(&map);
 
-    // Pointer to the currently selected algorithm, ad flag that indicates whether to perform search, and if path has been found or not.
+    // Pointer to the currently selected algorithm, and flag that indicates whether to perform search, and if path has been found or not.
     Algorithms::GraphSearchAlgorithm* path_finding_algorithm = &bfs_algorithm;
     bool path_search = false, path_found = false;
 
@@ -55,37 +61,35 @@ int main() {
             }
         }
 
-        // Calculate the width & height of the cells, so that they all fill the screen completely.
-        // In order to ensure that they all will fill the screen, we will ceil the result, and calculate their size as if we had one row and column less.
-        int cell_width = ceil(1.0 * GetRenderWidth() / (GRID_SIZE / 8 - 1));
-        int cell_height = ceil(1.0 * GetRenderHeight() / (GRID_SIZE / 8 - 1));
-        int cell_size = std::min(cell_width, cell_height);
-
-        // Update the information on the window size and cell size of the grid in case the user resized the window. Draw the grid.
-        map.SetWindowSize(GetRenderWidth(), GetRenderHeight());
+        // Update the information on the cell size of the grid in case the user resized the window. Draw the grid.
+        cell_size = ceil(1.0 * std::max(GetRenderWidth(), GetRenderHeight()) / GRID_SIZE * 8);
         map.SetCellSize(cell_size);
         map.Draw();
 
         if (show_help) {
-            // Draw the help box on the center of the screen, based on the text size.
-            // To draw something on the center of the screen, you take the half of the screen, take the half of what you are drawing, and subtract them.
+            // Draw the help box on the center of the screen (take half of A and half of B and subtract them, simple as that), based on the text size.
             Vector2 txt_size = MeasureTextEx(GetFontDefault(), HELP_TEXT, FONT_SIZE, SPACING);
-            DrawRectangle(GetRenderWidth() / 2 - txt_size.x / 2 - BG_MARGIN / 2, GetRenderHeight() / 2 - txt_size.y / 2 - BG_MARGIN / 2, txt_size.x + BG_MARGIN, txt_size.y + BG_MARGIN, WHITE);
-            DrawTextEx(GetFontDefault(), HELP_TEXT, { GetRenderWidth() / 2 - txt_size.x / 2, GetRenderHeight() / 2 - txt_size.y / 2 }, FONT_SIZE, SPACING, BLACK);
+            Vector2 upper_left = { GetRenderWidth() / 2 - txt_size.x / 2, GetRenderHeight() / 2 - txt_size.y / 2 };
+            DrawRectangle(upper_left.x - BG_MARGIN / 2, upper_left.y - BG_MARGIN / 2, txt_size.x + BG_MARGIN, txt_size.y + BG_MARGIN, WHITE);
+            DrawTextEx(GetFontDefault(), HELP_TEXT, upper_left, FONT_SIZE, SPACING, BLACK);
         }
 
         // Send the frame buffer for drawing on the screen.
         EndDrawing();
 
         if (!path_search) {
-            // Handle all the mouse events in the grid, only if the search isn't running.
+            // In case no algorithm is running, allow the user to set walls/empty cells or starting and ending node.
             map.MouseSetWallsOrEmptyCells();
             map.MouseSetStartOrEndCell();
         }
-        map.MouseZoomAndPan();
+
+        if (!show_help) {
+            // Allow user to perform zooming & panning, only in case the help isn't shown.
+            map.MouseZoomAndPan();
+        }
 
         if ((IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) && IsKeyPressed(KEY_SLASH)) {
-            // In case the question mark has been pressed, stop showing the help text if its currently shown, or start showing it again if it isn't shown.
+            // In case the question mark has been pressed, toggle the help.
             show_help = !show_help;
         }
 
@@ -119,13 +123,14 @@ int main() {
                 path_search = true;
             }
             path_found = false;
+            show_help = false;
         }
 
-        if(IsKeyPressed(KEY_R)) {
-            map.Reset();
+        if (IsKeyPressed(KEY_R)) {
+            // If the user has pressed R, center him on the screen and reset the scale.
+            map.ResetZoomAndPan();
         }
     }
 
     return 0;
 }
-

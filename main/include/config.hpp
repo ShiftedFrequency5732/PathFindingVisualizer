@@ -10,11 +10,13 @@ namespace Constants {
     constexpr int SPACING = 1;
     constexpr int FONT_SIZE = 40;
     constexpr int BG_MARGIN = 25;
-    constexpr const char* HELP_TEXT = "Keyboard Hotkeys:\nW + Left Mouse - Walls\nN + Left Mouse - Empty Cells\nS + Left Mouse - Start Cell\nE + Left Mouse - End Cell\n1 - Breadth First Search\n2 - Depth First Search\n3 - Dijkstra's Algorithm\n4 - A* Algorithm\nSpace - Run / Stop / Clear\n? - Toggle Help\n\nMouse Right - Move in space\nMouse Wheel - Zoom";
+    constexpr const char* HELP_TEXT = "W + Left Mouse - Wall Cells\nN + Left Mouse - Empty Cells\nS + Left Mouse - Start Cell\nE + Left Mouse - End Cell\n1 - Breadth First Search\n2 - Depth First Search\n3 - Dijkstra's Algorithm\n4 - A* Algorithm\nSpace - Run / Stop / Clear\n? - Toggle Help\nCtrl + Mouse Left - Move In Space\nCtrl + Mouse Wheel - Zoom\nR - Reset Zoom & Location";
 
     // Grid related constants.
-    constexpr int GRID_SIZE = 150;
     constexpr int GAP_PX = 5;
+    constexpr int GRID_SIZE = 150;
+
+    // Zoom & Panning related constants.
     constexpr float ZOOM = 0.10f;
     constexpr float ZOOM_LOWER_BOUND = 0.01f;
     constexpr float ZOOM_UPPER_BOUND = 5.0f;
