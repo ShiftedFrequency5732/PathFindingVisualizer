@@ -183,10 +183,10 @@ namespace Algorithms {
 
         float scroll = GetMouseWheelMove();
         if (scroll >= 0.5) {
-            scale = { scale.x * 1.020f, scale.y * 1.020f };
+            scale = { scale.x * 1.1f, scale.y * 1.1f };
         }
         else if (scroll <= -0.5) {
-            scale = { scale.x * .980f, scale.y * .980f };
+            scale = { scale.x * .9f, scale.y * .9f };
         }
 
         Vector2 mouseAfterZoom = ScrToWld(mcur);
