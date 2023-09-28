@@ -63,25 +63,30 @@ namespace Algorithms {
     void Grid::MouseSetStartOrEndCell() {
         if ((IsKeyDown(KEY_S) || IsKeyDown(KEY_E)) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             // Take the current position of the mouse (that is in the screen domain), and turn it into the world domain
-            Vector2 curr = ScreenToWorld({ (float) GetMouseX(), (float) GetMouseY() });
+            Vector2 curr_scr = Vector2({ (float) GetMouseX(), (float) GetMouseY() });
+            Vector2 top_left = WorldToScreen({ (float)0, (float)0 });
+            Vector2 bottom_right = WorldToScreen({ (float) GRID_SIZE * this->cell_size + GAP_PX, (float) GRID_SIZE * this->cell_size + GAP_PX });
 
-            // Map the mouse position to the cell of the matrix.
-            int new_i = curr.y / this->cell_size;
-            int new_j = curr.x / this->cell_size;
+            if (in_bounds(curr_scr, top_left.x, bottom_right.x, top_left.y, bottom_right.y)) {
+                Vector2 curr_wld = ScreenToWorld(curr_scr);
+                // Map the mouse position to the cell of the matrix.
+                int new_i = curr_wld.y / this->cell_size;
+                int new_j = curr_wld.x / this->cell_size;
 
-            if (matrix[new_i][new_j].GetType() == Cell::CellType::EMPTY) {
-                // If the user is holding S, the cell that we will work with is start, otherwise he is holding E and then we will work with the end cell.
-                Cell::CellType type = IsKeyDown(KEY_S) ? Cell::CellType::START : Cell::CellType::END;
-                CellPoint& ref_cell = IsKeyDown(KEY_S) ? start_cell : end_cell;
+                if (matrix[new_i][new_j].GetType() == Cell::CellType::EMPTY) {
+                    // If the user is holding S, the cell that we will work with is start, otherwise he is holding E and then we will work with the end cell.
+                    Cell::CellType type = IsKeyDown(KEY_S) ? Cell::CellType::START : Cell::CellType::END;
+                    CellPoint& ref_cell = IsKeyDown(KEY_S) ? start_cell : end_cell;
 
-                if (ref_cell.IsValid()) {
-                    // In case we set the start or the end cell in the past remove it. We want to have only one start and the end cell.
-                    matrix[ref_cell.I()][ref_cell.J()].SetType(Cell::CellType::EMPTY);
+                    if (ref_cell.IsValid()) {
+                        // In case we set the start or the end cell in the past remove it. We want to have only one start and the end cell.
+                        matrix[ref_cell.I()][ref_cell.J()].SetType(Cell::CellType::EMPTY);
+                    }
+
+                    // Remember the new position of the cell, and set its type in the matrix.
+                    ref_cell = CellPoint(new_i, new_j);
+                    matrix[new_i][new_j].SetType(type);
                 }
-
-                // Remember the new position of the cell, and set its type in the matrix.
-                ref_cell = CellPoint(new_i, new_j);
-                matrix[new_i][new_j].SetType(type);
             }
         }
     }
@@ -97,20 +102,19 @@ namespace Algorithms {
             this->mouse_prev = mouse_curr;
             this->mouse_curr = { (float) GetMouseX(), (float) GetMouseY() };
 
-            if (this->mouse_prev.x == -1 && this->mouse_prev.y == -1) {
-                // In case we do not have the previous mouse point, let it be equal to the current mouse point, that way it would seem as if we just made a click for start.
-                this->mouse_prev = mouse_curr;
-            }
-
             // Convert the two previous positions into the world domain.
             this->mouse_prev_wld = mouse_curr_wld;
             this->mouse_curr_wld = ScreenToWorld(mouse_curr);
+            if (this->mouse_prev_wld.x == -1 && this->mouse_prev_wld.y == -1) {
+                // In case we do not have the previous mouse point, let it be equal to the current mouse point, that way it would seem as if we just made a click for start.
+                this->mouse_prev_wld = mouse_curr_wld;
+            }
 
             // Calculate 
-            Vector2 top_left = ScreenToWorld({ 0, 0 });
-            Vector2 bottom_right = ScreenToWorld({ (float)window_width, (float)window_height });
+            Vector2 top_left = WorldToScreen({ (float)0, (float)0 });
+            Vector2 bottom_right = WorldToScreen({ (float) GRID_SIZE * this->cell_size + GAP_PX, (float) GRID_SIZE * this->cell_size + GAP_PX });
 
-            if (in_bounds(mouse_curr_wld, top_left.x, bottom_right.x, top_left.y, bottom_right.y) && in_bounds(mouse_prev_wld, top_left.x, bottom_right.x, top_left.y, bottom_right.y)) {
+            if (in_bounds(mouse_curr, top_left.x, bottom_right.x, top_left.y, bottom_right.y) && in_bounds(mouse_prev, top_left.x, bottom_right.x, top_left.y, bottom_right.y)) {
                 // Calculate the slope of the line between the previous and current mouse position.
                 float x_distance = mouse_curr_wld.x - mouse_prev_wld.x;
                 float y_distance = mouse_curr_wld.y - mouse_prev_wld.y;

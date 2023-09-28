@@ -59,7 +59,7 @@ int main() {
         // In order to ensure that they all will fill the screen, we will ceil the result, and calculate their size as if we had one row and column less.
         int cell_width = ceil(1.0 * GetRenderWidth() / (GRID_SIZE / 8 - 1));
         int cell_height = ceil(1.0 * GetRenderHeight() / (GRID_SIZE / 8 - 1));
-        int cell_size = std::max(cell_width, cell_height);
+        int cell_size = std::min(cell_width, cell_height);
 
         // Update the information on the window size and cell size of the grid in case the user resized the window. Draw the grid.
         map.SetWindowSize(GetRenderWidth(), GetRenderHeight());
