@@ -1,43 +1,30 @@
 #include "../include/bfs.hpp"
-#include <iostream>
 
 namespace Algorithms {
-    static void clear(std::queue<CellPoint> &cells) {
-        // Clear the queue, by swapping the full one with the new empty one, the full one will get destroyed as a local variable of this funciton.
-        std::queue<CellPoint> clean_queue;
-        std::swap(cells, clean_queue);
-    }
-
     void BFS::Prepare() {
         // Clear the queue, and add the starting cell to the queue.
-        clear(this->cells);
-        if (this->map) {
-            cells.push(this->map->GetStartCellPoint());
-        }
+        this->cells = std::queue<CellPoint>();
+        this->cells.push(this->map.GetStartCellPoint());
     }
 
     void BFS::Step() {
-        if (!cells.empty()) {
-            CellPoint current_cell = cells.front();
-            cells.pop();
+        if (!this->cells.empty()) {
+            // If we have cells to visit, take one from the queue.
+            CellPoint current_cell = this->cells.front();
+            this->cells.pop();
 
-            if (current_cell == this->map->GetEndCellPoint()) {
+            if (current_cell == this->map.GetEndCellPoint()) {
                 // If we have found the end cell, set that we are done.
                 this->finished = true;
                 return;
             }
 
-            if (this->visited[current_cell.I()][current_cell.J()] == CellState::VISITED) {
-                // If we have visited this cell, skip the current iteration of the algorithm.
-                return;
-            }
-
             // Mark that we visited this cell.
-            visited[current_cell.I()][current_cell.J()] = CellState::VISITED;
+            this->states[current_cell.I()][current_cell.J()] = CellState::VISITED;
 
-            if (map->GetCell(current_cell.I(), current_cell.J()).GetType() == Cell::CellType::EMPTY) {
+            if (this->map.GetCell(current_cell.I(), current_cell.J()).GetType() == Cell::CellType::EMPTY) {
                 // If the current cell is empty cell, set its fill color to be blue to indicate that it has been processed.
-                map->GetCell(current_cell.I(), current_cell.J()).SetFillColor(BLUE);
+                this->map.GetCell(current_cell.I(), current_cell.J()).SetFillColor(BLUE);
             }
 
             while (true) {
@@ -49,19 +36,20 @@ namespace Algorithms {
                     break;
                 }
 
-                Cell& neighbor_cell = this->map->GetCell(neighbor.I(), neighbor.J());
-                if (neighbor_cell.GetType() != Cell::CellType::WALL && visited[neighbor.I()][neighbor.J()] != CellState::VISITED) {
+                Cell& neighbor_cell = this->map.GetCell(neighbor.I(), neighbor.J());
+                if (neighbor_cell.GetType() != Cell::CellType::WALL && this->states[neighbor.I()][neighbor.J()] == CellState::UNVISITED) {
                     // If the neighbor we found isn't a wall, and if it is unvisited, store that we can get to the neighbour through the current cell.
-                    trace[neighbor.I()][neighbor.J()] = current_cell;
+                    // Because we are dealing here with only unvisited cells (states: TO_VISIT and VISITED) are skipped, in the queue we won't have any duplicats.
+                    this->trace[neighbor.I()][neighbor.J()] = current_cell;
 
                     // Mark that this cell will be visited in the future, and color it yellow if it is empty (isn't start / end cell).
-                    visited[neighbor.I()][neighbor.J()] = CellState::TO_VISIT;
-                    if(neighbor_cell.GetType() == Cell::CellType::EMPTY) {
+                    states[neighbor.I()][neighbor.J()] = CellState::TO_VISIT;
+                    if (neighbor_cell.GetType() == Cell::CellType::EMPTY) {
                         neighbor_cell.SetFillColor(YELLOW);
                     }
 
-                    // Push it to the queue.
-                    cells.push(neighbor);
+                    // Push the neighobr to the queue.
+                    this->cells.push(neighbor);
                 }
             }
 
@@ -73,4 +61,3 @@ namespace Algorithms {
         this->finished = true;
     }
 }
-

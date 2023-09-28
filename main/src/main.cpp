@@ -18,6 +18,8 @@ using Constants::HELP_TEXT;
 using Constants::FONT_SIZE;
 using Constants::SPACING;
 
+using Constants::GRID_SIZE;
+
 int main() {
     // Initialize the basic window, set the width, the height, the title, the target FPS, and make it resizable.
     InitWindow(INITIAL_WIDTH, INITIAL_HEIGHT, WINDOW_TITLE);
@@ -36,10 +38,10 @@ int main() {
     map.ResetZoomAndPan();
 
     // Algorithms that will perform the path search.
-    Algorithms::BFS bfs_algorithm(&map);
-    Algorithms::DFS dfs_algorithm(&map);
-    Algorithms::Dijkstra dijkstras_algorithm(&map);
-    Algorithms::AStar astar_algorithm(&map);
+    Algorithms::BFS bfs_algorithm(map);
+    Algorithms::DFS dfs_algorithm(map);
+    Algorithms::Dijkstra dijkstras_algorithm(map);
+    Algorithms::AStar astar_algorithm(map);
 
     // Pointer to the currently selected algorithm, and flag that indicates whether to perform search, and if path has been found or not.
     Algorithms::GraphSearchAlgorithm* path_finding_algorithm = &bfs_algorithm;
@@ -78,13 +80,13 @@ int main() {
         EndDrawing();
 
         if (!path_search) {
-            // In case no algorithm is running, allow the user to set walls/empty cells or starting and ending node.
+            // In case no algorithm is running, allow the user to set the walls / empty cells or starting and ending node.
             map.MouseSetWallsOrEmptyCells();
             map.MouseSetStartOrEndCell();
         }
 
         if (!show_help) {
-            // Allow user to perform zooming & panning, only in case the help isn't shown.
+            // Allow user to perform the zooming & panning, only in case the help isn't shown.
             map.MouseZoomAndPan();
         }
 
@@ -118,7 +120,7 @@ int main() {
                 path_search = false;
             }
             else if (map.GetStartCellPoint().IsValid() && map.GetEndCellPoint().IsValid()) {
-                // If we picked a different algorithm to run, prepare it, and start running it, only if the user has placed the starting and ending cell.
+                // If we picked a different algorithm to run, prepare it, and start running it, only if the user has placed the starting and the ending cell.
                 path_finding_algorithm->Prepare();
                 path_search = true;
             }

@@ -42,4 +42,3 @@ namespace Algorithms {
         return this->fill;
     }
 }
-

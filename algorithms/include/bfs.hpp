@@ -17,4 +17,3 @@ namespace Algorithms {
         void Step();
     };
 }
-

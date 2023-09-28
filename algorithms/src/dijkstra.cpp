@@ -13,12 +13,10 @@ namespace Algorithms {
             }
         }
 
-        if (this->map) {
-            // Push the starting cell to the queue with the distance of zero, and set the distance to this starting node to be zero.
-            // The distnace from the start to the start is zero obviously.
-            cells.push({ 0, map->GetStartCellPoint() });
-            this->distance[map->GetStartCellPoint().I()][map->GetStartCellPoint().J()] = 0;
-        }
+        // Push the starting cell to the queue with the distance of zero, and set the distance to this starting node to be zero.
+        // The distnace from the start to the start is zero obviously.
+        cells.push({ 0, map.GetStartCellPoint() });
+        this->distance[map.GetStartCellPoint().I()][map.GetStartCellPoint().J()] = 0;
     }
 
     void Dijkstra::Step() {
@@ -26,23 +24,23 @@ namespace Algorithms {
             CellPoint current_cell = cells.top().second;
             cells.pop();
 
-            if (current_cell == this->map->GetEndCellPoint()) {
+            if (current_cell == this->map.GetEndCellPoint()) {
                 // If we have found the end cell, set that we are done.
                 this->finished = true;
                 return;
             }
 
-            if (this->visited[current_cell.I()][current_cell.J()] == CellState::VISITED) {
+            if (this->states[current_cell.I()][current_cell.J()] == CellState::VISITED) {
                 // If we have visited this cell, skip the current iteration of the algorithm.
                 return;
             }
 
             // Mark that we visited this cell.
-            visited[current_cell.I()][current_cell.J()] = CellState::VISITED;
+            states[current_cell.I()][current_cell.J()] = CellState::VISITED;
 
-            if (map->GetCell(current_cell.I(), current_cell.J()).GetType() == Cell::CellType::EMPTY) {
+            if (map.GetCell(current_cell.I(), current_cell.J()).GetType() == Cell::CellType::EMPTY) {
                 // If the current cell is empty cell, set its fill color to be blue to indicate that it has been processed.
-                map->GetCell(current_cell.I(), current_cell.J()).SetFillColor(BLUE);
+                map.GetCell(current_cell.I(), current_cell.J()).SetFillColor(BLUE);
             }
 
             while (true) {
@@ -53,8 +51,8 @@ namespace Algorithms {
                     // If the current cell doesn't have any neighbors left, quit the loop.
                     break;
                 }
-                Cell& neighbor_cell = this->map->GetCell(neighbor.I(), neighbor.J());
-                if (neighbor_cell.GetType() != Cell::CellType::WALL && visited[neighbor.I()][neighbor.J()] != CellState::VISITED) {
+                Cell& neighbor_cell = this->map.GetCell(neighbor.I(), neighbor.J());
+                if (neighbor_cell.GetType() != Cell::CellType::WALL && states[neighbor.I()][neighbor.J()] != CellState::VISITED) {
                     if (distance[neighbor.I()][neighbor.J()] > distance[current_cell.I()][current_cell.J()] + 1) {
                         // If the neighbor we found isn't a wall, and if it is unvisited, and if we can get to the neighbor through the current cell with a shorter distance from the starting cell.
                         // Then store that new distance, and store the current cell as the previous cell of the neighbor.
@@ -62,7 +60,7 @@ namespace Algorithms {
                         trace[neighbor.I()][neighbor.J()] = current_cell;
 
                         // In case the neighboring cell is empty, color it yellow to indicate that it will be processed.
-                        visited[neighbor.I()][neighbor.J()] = CellState::TO_VISIT;
+                        states[neighbor.I()][neighbor.J()] = CellState::TO_VISIT;
                         if (neighbor_cell.GetType() == Cell::CellType::EMPTY) {
                             neighbor_cell.SetFillColor(YELLOW);
                         }

@@ -1,5 +1,5 @@
-#include "../include/cell_point.hpp"
 #include "../../main/include/config.hpp"
+#include "../include/cell_point.hpp"
 
 namespace Algorithms {
     using Constants::GRID_SIZE;
@@ -18,19 +18,21 @@ namespace Algorithms {
         return this->j;
     }
 
-    bool CellPoint::IsValid() {
+    bool CellPoint::IsValid() const {
         // The CellPoint is valid if it would be in the bounds of the grid.
         return (this->i >= 0 && this->i < GRID_SIZE && this->j >= 0 && this->j < GRID_SIZE);
     }
 
-    CellPoint CellPoint::GetNextNeighbor() {
+    CellPoint CellPoint::GetNextNeighbor() const {
         CellPoint points[] = { CellPoint(this->i - 1, this->j), CellPoint(this->i + 1, this->j), CellPoint(this->i, this->j - 1), CellPoint(this->i, this->j + 1) };
 
         while (this->head < 4) {
-            // Pick the first neighbor we didn't that is valid. The head points to the neighbor that we can pick if it is valid.
+            // Pick the first neighbor that we didn't that is valid. The head points to the neighbor that we can pick if it is valid.
             if (points[this->head].IsValid()) {
                 return points[this->head++];
             }
+
+            // If the cell point neighbor that was pointed by the head isn't valid, try again by moving on to the next one.
             ++this->head;
         }
 

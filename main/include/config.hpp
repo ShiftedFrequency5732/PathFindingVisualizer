@@ -17,7 +17,7 @@ namespace Constants {
     constexpr int GRID_SIZE = 150;
 
     // Zoom & Panning related constants.
-    constexpr float ZOOM = 0.10f;
+    constexpr float ZOOM = 0.1f;
     constexpr float ZOOM_LOWER_BOUND = 0.01f;
     constexpr float ZOOM_UPPER_BOUND = 5.0f;
 }

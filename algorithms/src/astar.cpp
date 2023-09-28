@@ -14,12 +14,10 @@ namespace Algorithms {
             }
         }
 
-        if (this->map) {
-            // Push the starting cell to the queue with the distance of zero, and set the distance to this starting node to be zero.
-            // The distnace from the start to the start is zero obviously.
-            cells.push({ 0, map->GetStartCellPoint() });
-            this->gValue[map->GetStartCellPoint().I()][map->GetStartCellPoint().J()] = 0;
-        }
+        // Push the starting cell to the queue with the distance of zero, and set the distance to this starting node to be zero.
+        // The distnace from the start to the start is zero obviously.
+        cells.push({ 0, map.GetStartCellPoint() });
+        this->gValue[map.GetStartCellPoint().I()][map.GetStartCellPoint().J()] = 0;
     }
 
     static int hValue(CellPoint p1, CellPoint p2) {
@@ -38,23 +36,23 @@ namespace Algorithms {
             CellPoint current_cell = cells.top().second;
             cells.pop();
 
-            if (current_cell == this->map->GetEndCellPoint()) {
+            if (current_cell == this->map.GetEndCellPoint()) {
                 // If we have found the end cell, set that we are done.
                 this->finished = true;
                 return;
             }
 
-            if (this->visited[current_cell.I()][current_cell.J()] == CellState::VISITED) {
+            if (this->states[current_cell.I()][current_cell.J()] == CellState::VISITED) {
                 // If we have visited this cell, skip the current iteration of the algorithm.
                 return;
             }
 
             // Mark that we visited this cell.
-            visited[current_cell.I()][current_cell.J()] = CellState::VISITED;
+            states[current_cell.I()][current_cell.J()] = CellState::VISITED;
 
-            if (map->GetCell(current_cell.I(), current_cell.J()).GetType() == Cell::CellType::EMPTY) {
+            if (map.GetCell(current_cell.I(), current_cell.J()).GetType() == Cell::CellType::EMPTY) {
                 // If the current cell is empty cell, set its fill color to be blue to indicate that it has been processed.
-                map->GetCell(current_cell.I(), current_cell.J()).SetFillColor(BLUE);
+                map.GetCell(current_cell.I(), current_cell.J()).SetFillColor(BLUE);
             }
 
             while (true) {
@@ -66,8 +64,8 @@ namespace Algorithms {
                     break;
                 }
 
-                Cell& neighbor_cell = this->map->GetCell(neighbor.I(), neighbor.J());
-                if (neighbor_cell.GetType() != Cell::CellType::WALL && visited[neighbor.I()][neighbor.J()] != CellState::VISITED) {
+                Cell& neighbor_cell = this->map.GetCell(neighbor.I(), neighbor.J());
+                if (neighbor_cell.GetType() != Cell::CellType::WALL && states[neighbor.I()][neighbor.J()] != CellState::VISITED) {
                     if (gValue[neighbor.I()][neighbor.J()] > gValue[current_cell.I()][current_cell.J()] + 1) {
                         // If the neighbor we found isn't a wall, and if it is unvisited, and if we can get to the neighbor through the current cell with a shorter distance from the starting cell.
                         // Then store that new distance, and store the current cell as the previous cell of the neighbor. In context of A* the distance is the gValue.
@@ -75,14 +73,14 @@ namespace Algorithms {
                         trace[neighbor.I()][neighbor.J()] = current_cell;
 
                         // In case the neighboring cell is empty, color it yellow to indicate that it will be processed.
-                        visited[neighbor.I()][neighbor.J()] = CellState::TO_VISIT;
+                        states[neighbor.I()][neighbor.J()] = CellState::TO_VISIT;
                         if (neighbor_cell.GetType() == Cell::CellType::EMPTY) {
                             neighbor_cell.SetFillColor(YELLOW);
                         }
 
                         // Push the neighboring cell to the priority queue. The main difference between Dijkstra's algorithm and A* is how the priority is calculated.
                         // It is calculated as f(n) = g(n) + h(n). Where g(n) is really just distance, and h(n) is the Heuristic value, n parameter is the node.
-                        cells.push({ gValue[neighbor.I()][neighbor.J()] + hValue(neighbor, this->map->GetEndCellPoint()), neighbor });
+                        cells.push({ gValue[neighbor.I()][neighbor.J()] + hValue(neighbor, this->map.GetEndCellPoint()), neighbor });
                     }
                 }
             }

@@ -4,7 +4,7 @@ namespace Algorithms {
     class CellPoint {
     private:
         int i, j;
-        int head;
+        mutable int head;
 
     public:
         CellPoint(int i = 0, int j = 0);
@@ -12,11 +12,10 @@ namespace Algorithms {
         int I() const;
         int J() const;
 
-        bool IsValid();
-        CellPoint GetNextNeighbor();
+        bool IsValid() const;
+        CellPoint GetNextNeighbor() const;
 
         friend bool operator == (const CellPoint& a, const CellPoint& b);
         friend bool operator != (const CellPoint& a, const CellPoint& b);
     };
 }
-

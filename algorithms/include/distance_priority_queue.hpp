@@ -13,7 +13,8 @@ namespace Algorithms {
         bool operator() (DistanceCell a, DistanceCell b) {
             // In case the 'a' has greater distance from the starting node than 'b'. Then we want it to come latter in the priority queue, after the 'b'.
             // We return true, because if we would use < instead and return it then, we would keep getting the pairs with maximum distance.
-            // That is because by default the priority queue is maximum priority queue, so we have to do the opposite of that and use >.
+            // That is because by default the priority queue is maximum priority queue, and it thinks that we will use the <.
+            // If you want to find the longest distance instead of the shortest, than change this to <.
             return (a.first > b.first);
         }
     };
@@ -27,4 +28,3 @@ namespace Algorithms {
         std::swap(cells, clean_queue);
     }
 }
-

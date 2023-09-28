@@ -20,4 +20,3 @@ namespace Algorithms {
         Color fill;
     };
 }
-

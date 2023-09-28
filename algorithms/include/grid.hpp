@@ -5,9 +5,9 @@
 #include "./cell_point.hpp"
 #include "./cell.hpp"
 
-using Constants::GRID_SIZE;
-
 namespace Algorithms {
+    using Constants::GRID_SIZE;
+
     class Grid {
     public:
         Grid();
@@ -35,10 +35,10 @@ namespace Algorithms {
         Vector2 mouse_prev, mouse_curr;
 
         Vector2 start_pan;
-        Vector2 offset, scale;
+        Vector2 offset;
+        float scale;
 
         Vector2 ScreenToWorld(Vector2 scr);
         Vector2 WorldToScreen(Vector2 wld);
     };
 }
-
