@@ -5,7 +5,7 @@
 namespace Algorithms {
     void AStar::Prepare() {
         // Clear the queue.
-        clear(this->cells);
+        this->cells = DistanceQueue();
 
         for (int i = 0; i < GRID_SIZE; ++i) {
             for (int j = 0; j < GRID_SIZE; ++j) {
@@ -42,11 +42,6 @@ namespace Algorithms {
                 return;
             }
 
-            if (this->states[current_cell.I()][current_cell.J()] == CellState::VISITED) {
-                // If we have visited this cell, skip the current iteration of the algorithm.
-                return;
-            }
-
             // Mark that we visited this cell.
             states[current_cell.I()][current_cell.J()] = CellState::VISITED;
 
@@ -65,7 +60,7 @@ namespace Algorithms {
                 }
 
                 Cell& neighbor_cell = this->map.GetCell(neighbor.I(), neighbor.J());
-                if (neighbor_cell.GetType() != Cell::CellType::WALL && states[neighbor.I()][neighbor.J()] != CellState::VISITED) {
+                if (neighbor_cell.GetType() != Cell::CellType::WALL && states[neighbor.I()][neighbor.J()] == CellState::UNVISITED) {
                     if (gValue[neighbor.I()][neighbor.J()] > gValue[current_cell.I()][current_cell.J()] + 1) {
                         // If the neighbor we found isn't a wall, and if it is unvisited, and if we can get to the neighbor through the current cell with a shorter distance from the starting cell.
                         // Then store that new distance, and store the current cell as the previous cell of the neighbor. In context of A* the distance is the gValue.
